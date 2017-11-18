@@ -20,7 +20,7 @@ public class Item<StoreElement> {
         this.value = value;
     }
 
-    public Item(@NonNull String key, int quantity, @NonNull StoreElement value) {
+    public Item(@NonNull String key, Quantity quantity, @NonNull StoreElement value) {
         this.key = Mangler.mangle(key, quantity);
         this.value = value;
     }

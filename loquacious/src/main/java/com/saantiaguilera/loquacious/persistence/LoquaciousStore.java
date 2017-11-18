@@ -6,7 +6,9 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.saantiaguilera.loquacious.Loquacious;
 import com.saantiaguilera.loquacious.model.Item;
+import com.saantiaguilera.loquacious.observer.OnLocaleChanged;
 import com.saantiaguilera.loquacious.parse.Serializer;
 import com.saantiaguilera.loquacious.util.LocaleUtil;
 
@@ -16,7 +18,7 @@ import java.util.Locale;
 /**
  * Created by saguilera on 11/18/17.
  */
-public class LoquaciousStore implements Store.Fetch, Store.Clear, Store.Commit {
+public class LoquaciousStore implements Store.Fetch, Store.Clear, Store.Commit, OnLocaleChanged {
 
     private static final String STORE_SHARED_PREFERENCES = LoquaciousStore.class.getName() + "_sharedPreferences";
 
@@ -31,6 +33,8 @@ public class LoquaciousStore implements Store.Fetch, Store.Clear, Store.Commit {
         sharedPreferences = context.getSharedPreferences(STORE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         locale = LocaleUtil.getLocale(context);
         this.serializer = serializer;
+
+        Loquacious.getInstance().subscribe(this);
     }
 
     @CheckResult
@@ -70,4 +74,9 @@ public class LoquaciousStore implements Store.Fetch, Store.Clear, Store.Commit {
         return null;
     }
 
+    @Override
+    public void onLocaleChanged(@NonNull Locale locale) {
+        this.locale = locale;
+    }
+    
 }

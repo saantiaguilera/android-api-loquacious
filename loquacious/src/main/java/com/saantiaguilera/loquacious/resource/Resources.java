@@ -5,7 +5,10 @@ import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.ibm.icu.text.PluralRules;
+import com.saantiaguilera.loquacious.Loquacious;
 import com.saantiaguilera.loquacious.model.Item;
+import com.saantiaguilera.loquacious.model.Quantity;
 import com.saantiaguilera.loquacious.observer.OnLocaleChanged;
 import com.saantiaguilera.loquacious.parse.Serializer;
 import com.saantiaguilera.loquacious.persistence.LoquaciousStore;
@@ -23,12 +26,16 @@ public class Resources extends android.content.res.Resources
         implements OnLocaleChanged, Store.Commit, Store.Clear {
 
     private @NonNull LoquaciousStore store;
+    private @NonNull PluralRules pluralRules;
     private volatile @NonNull Locale locale;
 
     public Resources(@NonNull Context context, @NonNull Serializer serializer) {
         super(context.getAssets(), context.getResources().getDisplayMetrics(), context.getResources().getConfiguration());
         store = new LoquaciousStore(context, serializer);
         locale = LocaleUtil.getLocale(context);
+        pluralRules = PluralRules.forLocale(locale);
+
+        Loquacious.getInstance().subscribe(this);
     }
 
     @Nullable
@@ -50,7 +57,13 @@ public class Resources extends android.content.res.Resources
     @Nullable
     @CheckResult
     private <ReturnType> ReturnType get(int id, int quantity, @NonNull Class<ReturnType> returnTypeClass) {
-        return fetch(Mangler.mangle(getResourceEntryName(id), quantity), returnTypeClass);
+        return fetch(
+                Mangler.mangle(
+                        getResourceEntryName(id),
+                        Quantity.from(pluralRules, quantity)
+                ),
+                returnTypeClass
+        );
     }
 
     //------------------------------------- Resources getter -------------------------------------//
@@ -191,6 +204,7 @@ public class Resources extends android.content.res.Resources
     @Override
     public void onLocaleChanged(@NonNull Locale locale) {
         this.locale = locale;
+        this.pluralRules = PluralRules.forLocale(locale);
     }
 
     //------------------------------------- Store interface --------------------------------------//
