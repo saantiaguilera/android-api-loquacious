@@ -6,10 +6,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.ibm.icu.text.PluralRules;
-import com.saantiaguilera.loquacious.Loquacious;
 import com.saantiaguilera.loquacious.model.Item;
 import com.saantiaguilera.loquacious.model.Quantity;
-import com.saantiaguilera.loquacious.observer.OnLocaleChanged;
 import com.saantiaguilera.loquacious.parse.Serializer;
 import com.saantiaguilera.loquacious.persistence.LoquaciousStore;
 import com.saantiaguilera.loquacious.persistence.Store;
@@ -17,25 +15,18 @@ import com.saantiaguilera.loquacious.util.LocaleUtil;
 import com.saantiaguilera.loquacious.util.Mangler;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by saguilera on 11/18/17.
  */
 public class Resources extends android.content.res.Resources
-        implements OnLocaleChanged, Store.Commit, Store.Clear {
+        implements Store.Commit, Store.Clear {
 
     private @NonNull LoquaciousStore store;
-    private @NonNull PluralRules pluralRules;
-    private volatile @NonNull Locale locale;
 
     public Resources(@NonNull Context context, @NonNull Serializer serializer) {
         super(context.getAssets(), context.getResources().getDisplayMetrics(), context.getResources().getConfiguration());
         store = new LoquaciousStore(context, serializer);
-        locale = LocaleUtil.getLocale(context);
-        pluralRules = PluralRules.forLocale(locale);
-
-        Loquacious.getInstance().subscribe(this);
     }
 
     @Nullable
@@ -60,7 +51,7 @@ public class Resources extends android.content.res.Resources
         return fetch(
                 Mangler.mangle(
                         getResourceEntryName(id),
-                        Quantity.from(pluralRules, quantity)
+                        Quantity.from(PluralRules.forLocale(LocaleUtil.current()), quantity)
                 ),
                 returnTypeClass
         );
@@ -82,18 +73,17 @@ public class Resources extends android.content.res.Resources
     @NonNull
     @Override
     public String getString(int id, Object... formatArgs) throws NotFoundException {
-        return String.format(locale, getString(id), formatArgs);
+        return String.format(LocaleUtil.current(), getString(id), formatArgs);
     }
 
     @NonNull
     @Override
     public String[] getStringArray(int id) throws NotFoundException {
-        String[] response = get(id, String[].class);
+        List<String> response = get(id, List.class);
 
         if (response != null) {
-            return response;
+            return response.toArray(new String[response.size()]);
         }
-
         return super.getStringArray(id);
     }
 
@@ -105,14 +95,13 @@ public class Resources extends android.content.res.Resources
         if (response != null) {
             return response;
         }
-
         return super.getQuantityString(id, quantity);
     }
 
     @NonNull
     @Override
     public String getQuantityString(int id, int quantity, Object... formatArgs) throws NotFoundException {
-        return String.format(locale, getQuantityString(id, quantity), formatArgs);
+        return String.format(LocaleUtil.current(), getQuantityString(id, quantity), formatArgs);
     }
 
     @Override
@@ -149,10 +138,10 @@ public class Resources extends android.content.res.Resources
     @NonNull
     @Override
     public CharSequence[] getTextArray(int id) throws NotFoundException {
-        CharSequence[] response = get(id, CharSequence[].class);
+        List<String> response = get(id, List.class);
 
         if (response != null) {
-            return response;
+            return response.toArray(new String[response.size()]);
         }
         return super.getTextArray(id);
     }
@@ -170,10 +159,10 @@ public class Resources extends android.content.res.Resources
 
     @Override
     public int getInteger(int id) throws NotFoundException {
-        Integer response = get(id, Integer.class);
+        Double response = get(id, Double.class);
 
         if (response != null) {
-            return response;
+            return response.intValue();
         }
         return super.getInteger(id);
     }
@@ -181,30 +170,34 @@ public class Resources extends android.content.res.Resources
     @NonNull
     @Override
     public int[] getIntArray(int id) throws NotFoundException {
-        int[] response = get(id, int[].class);
+        List<Double> response = get(id, List.class);
 
         if (response != null) {
-            return response;
+            int[] arr = new int[response.size()];
+            for (int i = 0 ; i < response.size() ; i++) { arr[i] = response.get(i).intValue(); }
+            return arr;
         }
         return super.getIntArray(id);
     }
 
     @Override
     public float getDimension(int id) throws NotFoundException {
-        Float response = get(id, Float.class);
+        String response = get(id, String.class);
 
         if (response != null) {
-            return response;
+            return DimensionConverter.stringToDimension(response, getDisplayMetrics());
         }
         return super.getDimension(id);
     }
 
-    //------------------------------------- OnLocaleChange Interface -----------------------------//
-
     @Override
-    public void onLocaleChanged(@NonNull Locale locale) {
-        this.locale = locale;
-        this.pluralRules = PluralRules.forLocale(locale);
+    public int getDimensionPixelSize(int id) throws NotFoundException {
+        String response = get(id, String.class);
+
+        if (response != null) {
+            return DimensionConverter.stringToDimensionPixelSize(response, getDisplayMetrics());
+        }
+        return super.getDimensionPixelSize(id);
     }
 
     //------------------------------------- Store interface --------------------------------------//

@@ -9,10 +9,9 @@ import com.saantiaguilera.loquacious.observer.LocaleBroadcastReceiver;
 import com.saantiaguilera.loquacious.observer.LocaleSubscribable;
 import com.saantiaguilera.loquacious.observer.OnLocaleChanged;
 import com.saantiaguilera.loquacious.parse.Serializer;
-import com.saantiaguilera.loquacious.persistence.Store;
 import com.saantiaguilera.loquacious.resource.Resources;
+import com.saantiaguilera.loquacious.util.LocaleUtil;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,10 +33,11 @@ public final class Loquacious implements OnLocaleChanged, LocaleSubscribable {
         onLocaleChangedList = new ArrayList<>();
         context.registerReceiver(new LocaleBroadcastReceiver(),
                 new IntentFilter(Intent.ACTION_LOCALE_CHANGED));
-        resources = new Resources(context, serializer);;
+        resources = new Resources(context, serializer);
     }
 
     public static void initialize(@NonNull Context context, @NonNull Serializer serializer) {
+        LocaleUtil.setSystemLocale(context);
         instance = new Loquacious(context, serializer);
     }
 

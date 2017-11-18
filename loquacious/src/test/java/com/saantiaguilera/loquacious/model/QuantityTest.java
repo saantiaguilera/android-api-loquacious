@@ -18,7 +18,7 @@ public class QuantityTest {
 
     @Test
     public void test_QuantityGetsParsedCorrectly_FromPlurals() {
-        PluralRules rules = PluralRules.forLocale(LocaleUtil.getLocale(RuntimeEnvironment.application));
+        PluralRules rules = PluralRules.forLocale(LocaleUtil.setSystemLocale(RuntimeEnvironment.application));
         Assert.assertEquals(Quantity.OTHER, Quantity.from(rules, 10));
     }
 

@@ -15,7 +15,7 @@ public class LocaleBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Loquacious.getInstance().onLocaleChanged(LocaleUtil.getLocale(context));
+        Loquacious.getInstance().onLocaleChanged(LocaleUtil.setSystemLocale(context));
     }
 
 }

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.Locale;
 
@@ -13,17 +14,30 @@ import java.util.Locale;
 
 public final class LocaleUtil {
 
+    @Nullable
+    private static volatile Locale current;
+
     private LocaleUtil() throws IllegalAccessException {
         throw new IllegalAccessException("Cant instantiate this");
     }
 
     @NonNull
     @TargetApi(Build.VERSION_CODES.N)
-    public static Locale getLocale(@NonNull Context context) {
+    public static Locale setSystemLocale(@NonNull Context context) {
+        Locale locale;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return context.getResources().getConfiguration().getLocales().get(0);
+            locale = context.getResources().getConfiguration().getLocales().get(0);
+            current = locale;
+            return locale;
         }
-        return context.getResources().getConfiguration().locale;
+        locale = context.getResources().getConfiguration().locale;
+        current = locale;
+        return locale;
+    }
+
+    @Nullable
+    public static Locale current() {
+        return current;
     }
 
 }
