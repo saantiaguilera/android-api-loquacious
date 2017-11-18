@@ -1,0 +1,6 @@
+println "hola"
+
+ext {
+    buildGradleVersion = '3.0.0'
+    kotlinVersion = '1.1.51'
+}

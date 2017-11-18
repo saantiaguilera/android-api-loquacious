@@ -1,0 +1,4 @@
+ext {
+    _targetSdkVersion = 26
+    _minSdkVersion = 14
+}
