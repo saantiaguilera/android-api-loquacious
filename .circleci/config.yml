@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Upload coverage
           command: |
-            ./gradlew jacocoTestReport
+            ./gradlew testReleaseUnitTestCoverage
             bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
       - run:
           name: Gradle build
