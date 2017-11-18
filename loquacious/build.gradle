@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'jacoco'
 
 apply from: 'dependencies.gradle'
 
@@ -14,6 +15,13 @@ android {
 
     testOptions.unitTests {
         includeAndroidResources = true
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
     }
 }
 

@@ -1,0 +1,38 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          - v1-dependencies-
+      - run:
+        name: Gradle dependencies
+        command: ./gradlew dependencies
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+      - run:
+        name: Gradle test
+        command: ./gradlew test
+      - run:
+        name: Upload coverage
+        command: |
+          ./gradlew jacocoTestReport
+          bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
+      - run:
+        name: Gradle build
+        command: ./gradlew build
+
+
+
