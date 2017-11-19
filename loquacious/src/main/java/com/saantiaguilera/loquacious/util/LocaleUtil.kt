@@ -19,6 +19,7 @@ class LocaleUtil @Throws(IllegalAccessException::class) private constructor() {
 
         @Volatile private var current: Locale? = null
 
+        @Suppress("DEPRECATION")
         @TargetApi(Build.VERSION_CODES.N)
         fun setSystemLocale(context: Context): Locale {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

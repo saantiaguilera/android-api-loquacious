@@ -59,9 +59,7 @@ class LoquaciousTest {
             }
 
             override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
+                return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
             }
         })
 
@@ -116,7 +114,7 @@ class LoquaciousTest {
             }
         })
 
-        var onLocaleChanged = { locale: Locale -> }
+        var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
 
         Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
@@ -137,7 +135,7 @@ class LoquaciousTest {
             }
         })
 
-        var onLocaleChanged = { locale: Locale -> }
+        var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
 
         Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
@@ -158,7 +156,7 @@ class LoquaciousTest {
             }
         })
 
-        var onLocaleChanged = { locale: Locale -> }
+        var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
 
         Assert.assertTrue(Loquacious.getInstance().unsubscribe(onLocaleChanged))
@@ -178,7 +176,7 @@ class LoquaciousTest {
             }
         })
 
-        var onLocaleChanged = { locale: Locale -> }
+        var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
 
         Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))

@@ -15,6 +15,7 @@ import com.saantiaguilera.loquacious.util.Mangler
 /**
  * Created by saguilera on 11/18/17.
  */
+@Suppress("DEPRECATION")
 class Resources(context: Context, serializer: Serializer) :
         android.content.res.Resources(
                 context.assets,
@@ -37,7 +38,7 @@ class Resources(context: Context, serializer: Serializer) :
             fetch(
                 Mangler.mangle(
                         getResourceEntryName(id),
-                        Quantity.from(PluralRules.forLocale(LocaleUtil.current()), quantity)
+                        Quantity.from(PluralRules.forLocale(LocaleUtil.current()), quantity)!!
                 )
             )
 

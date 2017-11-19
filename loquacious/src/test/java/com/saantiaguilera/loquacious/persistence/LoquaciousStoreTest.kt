@@ -38,9 +38,7 @@ class LoquaciousStoreTest {
             }
 
             override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
+                return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
             }
         }
         Loquacious.initialize(RuntimeEnvironment.application, serializer)
@@ -132,7 +130,7 @@ class LoquaciousStoreTest {
         store!!.put(item)
 
         try {
-            val pricePlusOne = store!!.fetch(item.key, MockDto::class.java)!!.value.price!! + 1
+            store!!.fetch(item.key, MockDto::class.java)!!.value.price!! + 1
             Assert.fail()
         } catch (ex: Exception) {
             Assert.assertTrue(ex is ClassCastException)

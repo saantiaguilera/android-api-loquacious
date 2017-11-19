@@ -13,14 +13,18 @@ class Mangler @Throws(IllegalAccessException::class) private constructor() {
 
     companion object {
 
-        fun mangle(key: String, quantity: Quantity?): String {
-            if (quantity == null) {
-                return mangle(key)
-            }
-            return Mangler::class.java.name + "_key_" + key + "_times_" + quantity
+        private val resources = "(anim|animator|array|attr|bool|color|dimen|drawable|fraction|id|" +
+                "integer|interpolator|layout|menu|mipmap|plurals|raw|string|style|transition|xml)"
+
+        private fun filterResFromKey(key: String): String {
+            return key.replace(Regex("^R\\.$resources\\."), "")
         }
 
-        fun mangle(key: String): String = Mangler::class.java.name + "_key_" + key
+        fun mangle(key: String, quantity: Quantity): String {
+            return Mangler::class.java.name + "_key_" + filterResFromKey(key) + "_times_" + quantity
+        }
+
+        fun mangle(key: String): String = mangle(key, Quantity.ONE)
     }
 
 }

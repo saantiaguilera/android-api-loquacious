@@ -42,9 +42,7 @@ class ResourceTest {
             }
 
             override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
+                return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
             }
         }
         Loquacious.initialize(RuntimeEnvironment.application, serializer)
