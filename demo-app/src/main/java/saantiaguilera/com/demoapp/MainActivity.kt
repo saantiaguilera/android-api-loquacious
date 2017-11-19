@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onResponse(call: Call<Repository.TextDto>?, response: Response<Repository.TextDto>?) {
-                        Loquacious.resources.put(Item("R.string.hello_world", response?.body()?.text))
+                        Loquacious.resources.put(Item(R.string.hello_world, response?.body()?.text))
                         updateHelloWorld()
                     }
                 })
