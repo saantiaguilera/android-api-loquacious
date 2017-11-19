@@ -1,6 +1,5 @@
 package com.saantiaguilera.loquacious.parse
 
-import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
 /**
