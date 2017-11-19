@@ -47,6 +47,8 @@ class Loquacious private constructor(context: Context) : OnLocaleChanged,
 
     companion object {
 
+        private var initialized = false
+
         /**
          * Instance getter
          */
@@ -65,8 +67,12 @@ class Loquacious private constructor(context: Context) : OnLocaleChanged,
          * Initialize the library
          */
         fun initialize(context: Context) {
+            if (initialized) {
+                throw IllegalStateException("Already initialized!")
+            }
             LocaleUtil.setSystemLocale(context)
             instance = Loquacious(context)
+            initialized = true
         }
 
         /**
@@ -76,7 +82,9 @@ class Loquacious private constructor(context: Context) : OnLocaleChanged,
          * This method will initialize loquacious
          */
         fun wrap(context: Context): Context {
-            initialize(context)
+            if (!initialized) {
+                initialize(context)
+            }
             return ContextWrapper.wrap(context)
         }
 

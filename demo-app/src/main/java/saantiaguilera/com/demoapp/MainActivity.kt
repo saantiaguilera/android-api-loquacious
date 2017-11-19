@@ -1,5 +1,6 @@
 package saantiaguilera.com.demoapp
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
@@ -26,6 +27,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun subscribe() = Loquacious.instance.subscribe { locale -> request(locale.displayLanguage) }
 
+    override fun attachBaseContext(newBase: Context?) = super.attachBaseContext(Loquacious.wrap(newBase!!))
+
     override fun onCreate(savedInstanceState: Bundle?) {
         subscribe()
 
@@ -40,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateHelloWorld() {
-        helloWorldText.text = Loquacious.resources.getString(R.string.hello_world)
+        helloWorldText.text = resources.getString(R.string.hello_world)
     }
 
     private fun request(locale: String) {

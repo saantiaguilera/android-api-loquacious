@@ -9,13 +9,6 @@ import com.saantiaguilera.loquacious.Loquacious
  */
 class MainApplication : Application() {
 
-    override fun attachBaseContext(base: Context?) {
-        initializeLoquacious(base!!)
-        super.attachBaseContext(Loquacious.wrap(base))
-    }
-
-    private fun initializeLoquacious(context: Context) {
-        Loquacious.initialize(context)
-    }
+    override fun attachBaseContext(base: Context?) = super.attachBaseContext(Loquacious.wrap(base!!))
 
 }
