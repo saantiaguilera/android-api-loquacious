@@ -1,6 +1,7 @@
 ## Loquacious - Getting resources on demand
 
-[![CircleCI](https://circleci.com/gh/saantiaguilera/android-api-loquacious/tree/master.svg?style=svg)](https://circleci.com/gh/saantiaguilera/android-api-loquacious/tree/master)
+[![CircleCI](https://circleci.com/gh/saantiaguilera/android-api-loquacious/tree/master.svg?style=svg)](https://circleci.com/gh/saantiaguilera/android-api-loquacious/tree/master)  [ ![Download](https://api.bintray.com/packages/saantiaguilera/maven/com.saantiaguilera.loquacious.loquacious/images/download.svg) ](https://bintray.com/saantiaguilera/maven/com.saantiaguilera.loquacious.loquacious/_latestVersion)
+
 
 Loquacious is a library for saving resources (Strings, booleans, whatever) in a localized way.
 
@@ -14,7 +15,7 @@ and more. The aim of this library is:
 
 ## Usage
 
-TBD
+Please refer to the [wiki](https://github.com/saantiaguilera/android-api-loquacious/wiki) for usage and installation
 
 ## License
 
