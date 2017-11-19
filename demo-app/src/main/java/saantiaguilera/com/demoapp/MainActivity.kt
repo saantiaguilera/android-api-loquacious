@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
             }
         })
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * We subscribe to locale changes, so we ask again the server for its localized strings
      */
-    private fun subscribe() = Loquacious.getInstance().subscribe { locale -> request(locale.displayLanguage) }
+    private fun subscribe() = Loquacious.instance.subscribe { locale -> request(locale.displayLanguage) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         initializeLoquacious()
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun updateHelloWorld() {
-        helloWorldText.text = Loquacious.getResources().getString(R.string.hello_world)
+        helloWorldText.text = Loquacious.resources.getString(R.string.hello_world)
     }
 
     private fun request(locale: String) {
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onResponse(call: Call<Repository.TextDto>?, response: Response<Repository.TextDto>?) {
-                        Loquacious.getResources().put(Item("R.string.hello_world", response?.body()?.text))
+                        Loquacious.resources.put(Item("R.string.hello_world", response?.body()?.text))
                         updateHelloWorld()
                     }
                 })

@@ -5,21 +5,17 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.observer.LocaleBroadcastReceiver
-import com.saantiaguilera.loquacious.observer.OnLocaleChanged
 import com.saantiaguilera.loquacious.parse.Serializer
 import com.saantiaguilera.loquacious.util.LocaleUtil
-
-import org.junit.Assert
-
 import org.junit.After
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.util.ReflectionHelpers
-
-import java.util.Locale
+import java.util.*
 
 /**
  * Created by saguilera on 11/18/17.
@@ -31,20 +27,20 @@ class LoquaciousTest {
 
     @After
     fun tearDown() {
-        ReflectionHelpers.setStaticField(Loquacious::class.java, "loquacious", null)
+        ReflectionHelpers.setStaticField(Loquacious::class.java, "instance", null)
         ReflectionHelpers.setStaticField(LocaleUtil::class.java, "current", null)
     }
 
     @Test
     fun test_CantUseWithoutInit() {
         try {
-            Loquacious.getInstance()
+            Loquacious.instance
             Assert.fail()
         } catch (ignored: Exception) {
         }
 
         try {
-            Loquacious.getResources()
+            Loquacious.resources
             Assert.fail()
         } catch (ignored: Exception) {
         }
@@ -58,12 +54,12 @@ class LoquaciousTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
             }
         })
 
-        Assert.assertNotNull(Loquacious.getInstance())
+        Assert.assertNotNull(Loquacious.instance)
     }
 
     @Test
@@ -73,14 +69,14 @@ class LoquaciousTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {
 
                 }.type)
             }
         })
 
-        Assert.assertNotNull(Loquacious.getResources())
+        Assert.assertNotNull(Loquacious.resources)
     }
 
     @Test
@@ -90,14 +86,14 @@ class LoquaciousTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {
 
                 }.type)
             }
         })
 
-        Assert.assertTrue(Loquacious.getInstance().subscribe({}))
+        Assert.assertTrue(Loquacious.instance.subscribe({}))
     }
 
     @Test
@@ -107,7 +103,7 @@ class LoquaciousTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {
 
                 }.type)
@@ -117,8 +113,8 @@ class LoquaciousTest {
         var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
 
-        Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
-        Assert.assertFalse(Loquacious.getInstance().subscribe(onLocaleChanged))
+        Assert.assertTrue(Loquacious.instance.subscribe(onLocaleChanged))
+        Assert.assertFalse(Loquacious.instance.subscribe(onLocaleChanged))
     }
 
     @Test
@@ -128,7 +124,7 @@ class LoquaciousTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {
 
                 }.type)
@@ -138,8 +134,8 @@ class LoquaciousTest {
         var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
 
-        Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
-        Assert.assertTrue(Loquacious.getInstance().unsubscribe(onLocaleChanged))
+        Assert.assertTrue(Loquacious.instance.subscribe(onLocaleChanged))
+        Assert.assertTrue(Loquacious.instance.unsubscribe(onLocaleChanged))
     }
 
     @Test
@@ -149,7 +145,7 @@ class LoquaciousTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {
 
                 }.type)
@@ -159,7 +155,7 @@ class LoquaciousTest {
         var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
 
-        Assert.assertTrue(Loquacious.getInstance().unsubscribe(onLocaleChanged))
+        Assert.assertTrue(Loquacious.instance.unsubscribe(onLocaleChanged))
     }
 
     @Test
@@ -169,7 +165,7 @@ class LoquaciousTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {
 
                 }.type)
@@ -179,7 +175,7 @@ class LoquaciousTest {
         var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
 
-        Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
+        Assert.assertTrue(Loquacious.instance.subscribe(onLocaleChanged))
 
         LocaleBroadcastReceiver().onReceive(RuntimeEnvironment.application, Intent())
 

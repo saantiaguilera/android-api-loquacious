@@ -3,8 +3,7 @@ package com.saantiaguilera.loquacious.util
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
-
-import java.util.Locale
+import java.util.*
 
 /**
  * Created by saguilera on 11/18/17.

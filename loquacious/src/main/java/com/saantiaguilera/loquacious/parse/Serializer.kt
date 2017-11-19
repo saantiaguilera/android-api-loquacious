@@ -8,5 +8,5 @@ import com.saantiaguilera.loquacious.model.Item
 interface Serializer {
     fun <Type> serialize(item: Item<Type>): String
 
-    fun <Type> hidrate(string: String, classType: Class<Type>): Item<Type>
+    fun <Type> hydrate(string: String, classType: Class<Type>): Item<Type>
 }

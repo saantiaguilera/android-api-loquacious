@@ -8,7 +8,6 @@ import android.support.annotation.CheckResult
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.parse.Serializer
 import com.saantiaguilera.loquacious.util.LocaleUtil
-import java.util.Locale
 
 /**
  * Created by saguilera on 11/18/17.
@@ -40,7 +39,7 @@ class LoquaciousStore(context: Context, private val serializer: Serializer) : St
     @CheckResult
     override fun <Type> fetch(name: String, typeClass: Class<Type>): Item<Type>? =
             sharedPreferences.getString(formatKey(name), "").let {
-                if (it.isEmpty()) null else serializer.hidrate(it, typeClass)
+                if (it.isEmpty()) null else serializer.hydrate(it, typeClass)
             }
 
     companion object {

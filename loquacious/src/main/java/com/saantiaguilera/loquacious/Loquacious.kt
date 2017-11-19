@@ -3,16 +3,13 @@ package com.saantiaguilera.loquacious
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-
 import com.saantiaguilera.loquacious.observer.LocaleBroadcastReceiver
 import com.saantiaguilera.loquacious.observer.LocaleSubscribable
 import com.saantiaguilera.loquacious.observer.OnLocaleChanged
 import com.saantiaguilera.loquacious.parse.Serializer
 import com.saantiaguilera.loquacious.resource.Resources
 import com.saantiaguilera.loquacious.util.LocaleUtil
-
-import java.util.ArrayList
-import java.util.Locale
+import java.util.*
 
 /**
  * Created by saguilera on 11/18/17.
@@ -41,16 +38,16 @@ class Loquacious private constructor(context: Context, serializer: Serializer) :
 
     companion object {
 
-        private var loquacious: Loquacious? = null
+        lateinit var instance: Loquacious
+            private set
+
+        val resources get() = Loquacious.instance.resources
 
         fun initialize(context: Context, serializer: Serializer) {
             LocaleUtil.setSystemLocale(context)
-            loquacious = Loquacious(context, serializer)
+            instance = Loquacious(context, serializer)
         }
 
-        fun getInstance(): Loquacious = loquacious!!
-
-        fun getResources(): Resources = getInstance().resources
     }
 
 }

@@ -8,10 +8,8 @@ import com.saantiaguilera.loquacious.model.Quantity
 import com.saantiaguilera.loquacious.parse.Serializer
 import com.saantiaguilera.loquacious.persistence.LoquaciousStore
 import com.saantiaguilera.loquacious.util.LocaleUtil
-
-import org.junit.Assert
-
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,8 +17,7 @@ import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.util.ReflectionHelpers
-
-import java.util.ArrayList
+import java.util.*
 
 
 /**
@@ -41,7 +38,7 @@ class ResourceTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
             }
         }
@@ -53,7 +50,7 @@ class ResourceTest {
 
     @After
     fun tearDown() {
-        ReflectionHelpers.setStaticField(Loquacious::class.java, "loquacious", null)
+        ReflectionHelpers.setStaticField(Loquacious::class.java, "instance", null)
         ReflectionHelpers.setStaticField(LocaleUtil::class.java, "current", null)
     }
 

@@ -3,14 +3,12 @@ package com.saantiaguilera.loquacious.observer
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.saantiaguilera.loquacious.Loquacious
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.parse.Serializer
 import com.saantiaguilera.loquacious.util.LocaleUtil
-
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,9 +16,7 @@ import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.util.ReflectionHelpers
-
-import java.util.ArrayList
-import java.util.Locale
+import java.util.*
 
 /**
  * Created by saguilera on 11/18/17.
@@ -32,7 +28,7 @@ class LocaleBroadcastReceiverTest {
 
     @After
     fun tearDown() {
-        ReflectionHelpers.setStaticField(Loquacious::class.java, "loquacious", null)
+        ReflectionHelpers.setStaticField(Loquacious::class.java, "instance", null)
         ReflectionHelpers.setStaticField(LocaleUtil::class.java, "current", null)
     }
 
@@ -43,12 +39,12 @@ class LocaleBroadcastReceiverTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
             }
         })
-        var loquacious = Mockito.spy(Loquacious.getInstance())
-        ReflectionHelpers.setStaticField(Loquacious::class.java, "loquacious", loquacious)
+        var loquacious = Mockito.spy(Loquacious.instance)
+        ReflectionHelpers.setStaticField(Loquacious::class.java, "instance", loquacious)
 
         LocaleBroadcastReceiver().onReceive(RuntimeEnvironment.application, Intent())
 
@@ -62,7 +58,7 @@ class LocaleBroadcastReceiverTest {
                 return Gson().toJson(item)
             }
 
-            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
                 return Gson().fromJson(string, object : TypeToken<Item<T>>() {
 
                 }.type)

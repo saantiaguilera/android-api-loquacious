@@ -1,10 +1,8 @@
 package com.saantiaguilera.loquacious.utils
 
 import com.saantiaguilera.loquacious.util.LocaleUtil
-
-import org.junit.Assert
-
 import org.junit.After
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner

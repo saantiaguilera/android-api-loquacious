@@ -2,10 +2,7 @@ package com.saantiaguilera.loquacious.resource
 
 import android.util.DisplayMetrics
 import android.util.TypedValue
-
-import java.util.Collections
-import java.util.HashMap
-import java.util.regex.Matcher
+import java.util.*
 import java.util.regex.Pattern
 
 object DimensionConverter {

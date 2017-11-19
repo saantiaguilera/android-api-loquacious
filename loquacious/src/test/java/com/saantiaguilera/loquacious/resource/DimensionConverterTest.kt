@@ -1,9 +1,6 @@
 package com.saantiaguilera.loquacious.resource
 
-import android.support.annotation.Dimension
-
 import org.junit.Assert
-
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
