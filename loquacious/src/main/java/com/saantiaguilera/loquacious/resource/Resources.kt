@@ -25,45 +25,38 @@ class Resources(context: Context, serializer: Serializer) :
     private val store: LoquaciousStore = LoquaciousStore(context, serializer)
 
     @CheckResult
-    private fun <ReturnType> fetch(entryName: String, returnTypeClass: Class<ReturnType>): ReturnType? =
-            store.fetch(entryName, returnTypeClass)?.value
+    private inline fun <reified ReturnType> fetch(entryName: String): ReturnType? =
+            store.fetch(entryName, ReturnType::class.java)?.value
 
     @CheckResult
-    fun <ReturnType> get(id: Int, returnTypeClass: Class<ReturnType>): ReturnType? =
-            fetch(Mangler.mangle(getResourceEntryName(id)), returnTypeClass)
+    private inline fun <reified ReturnType> get(id: Int): ReturnType? =
+            fetch(Mangler.mangle(getResourceEntryName(id)))
 
     @CheckResult
-    fun <ReturnType> get(id: Int, quantity: Int, returnTypeClass: Class<ReturnType>): ReturnType? =
+    private inline fun <reified ReturnType> get(id: Int, quantity: Int): ReturnType? =
             fetch(
                 Mangler.mangle(
                         getResourceEntryName(id),
                         Quantity.from(PluralRules.forLocale(LocaleUtil.current()), quantity)
-                ),
-                returnTypeClass
+                )
             )
 
     //------------------------------------- Resources getter -------------------------------------//
 
-    private inline fun <reified T: Any> getArray(id: Int): Array<T>? {
-        val getter = get(id, List::class.java)
-        val newArr by lazy { ArrayList<T>() }
-        getter?.forEach { value -> newArr.add(value as T) }
-        return if (getter == null) null else newArr.toTypedArray()
-    }
-
     @Throws(NotFoundException::class)
-    override fun getString(id: Int): String = get(id, String::class.java) ?: super.getString(id)
+    override fun getString(id: Int): String = get(id) ?: super.getString(id)
 
     @Throws(NotFoundException::class)
     override fun getString(id: Int, vararg formatArgs: Any): String =
             String.format(LocaleUtil.current()!!, getString(id), *formatArgs)
 
     @Throws(NotFoundException::class)
-    override fun getStringArray(id: Int): Array<String> = getArray(id) ?: super.getStringArray(id)
+    override fun getStringArray(id: Int): Array<String> =
+            get<ArrayList<String>>(id)?.toTypedArray() ?: super.getStringArray(id)
 
     @Throws(NotFoundException::class)
     override fun getQuantityString(id: Int, quantity: Int): String =
-            get(id, quantity, String::class.java) ?: super.getQuantityString(id, quantity)
+            get(id, quantity) ?: super.getQuantityString(id, quantity)
 
     @Throws(NotFoundException::class)
     override fun getQuantityString(id: Int, quantity: Int, vararg formatArgs: Any): String =
@@ -71,42 +64,38 @@ class Resources(context: Context, serializer: Serializer) :
 
     @Throws(NotFoundException::class)
     override fun getBoolean(id: Int): Boolean =
-            get(id, Boolean::class.java) ?: super.getBoolean(id)
+            get(id) ?: super.getBoolean(id)
 
     @Throws(NotFoundException::class)
     override fun getText(id: Int): CharSequence =
-            get(id, CharSequence::class.java) ?: super.getText(id)
+            get(id) ?: super.getText(id)
 
     override fun getText(id: Int, def: CharSequence): CharSequence =
-            get(id, CharSequence::class.java) ?: super.getText(id, def)
+            get(id) ?: super.getText(id, def)
 
     @Throws(NotFoundException::class)
     override fun getTextArray(id: Int): Array<CharSequence> =
-            getArray(id) ?: super.getTextArray(id)
+            get<ArrayList<CharSequence>>(id)?.toTypedArray() ?: super.getTextArray(id)
 
     @Throws(NotFoundException::class)
     override fun getQuantityText(id: Int, quantity: Int): CharSequence =
-            get(id, quantity, CharSequence::class.java) ?: super.getQuantityText(id, quantity)
+            get(id, quantity) ?: super.getQuantityText(id, quantity)
 
     @Throws(NotFoundException::class)
     override fun getInteger(id: Int): Int =
-            get(id, Double::class.java)?.toInt() ?: super.getInteger(id)
+            get<Double>(id)?.toInt() ?: super.getInteger(id)
 
     @Throws(NotFoundException::class)
     override fun getIntArray(id: Int): IntArray {
-        val response = getArray<Double>(id) ?: return super.getIntArray(id)
-        val arr by lazy { IntArray(response.size) }
-
-        response.forEachIndexed { index, value ->
-            arr[index] = value.toInt()
-        }
-
-        return arr
+        val arr = get<ArrayList<Int>>(id) ?: return super.getIntArray(id)
+        val unboxedArr by lazy { IntArray(arr.size) }
+        arr.forEachIndexed { index, value -> unboxedArr[index] = value }
+        return unboxedArr
     }
 
     @Throws(NotFoundException::class)
     override fun getDimension(id: Int): Float {
-        val response = get(id, String::class.java)
+        val response = get<String>(id)
         return if (response != null) {
             DimensionConverter.stringToDimension(response, displayMetrics)
         } else super.getDimension(id)
@@ -114,7 +103,7 @@ class Resources(context: Context, serializer: Serializer) :
 
     @Throws(NotFoundException::class)
     override fun getDimensionPixelSize(id: Int): Int {
-        val response = get(id, String::class.java)
+        val response = get<String>(id)
         return if (response != null) {
             DimensionConverter.stringToDimensionPixelSize(response, displayMetrics)
         } else super.getDimensionPixelSize(id)
