@@ -1,4 +1,15 @@
 ext {
     buildGradleVersion = '3.0.0'
     kotlinVersion = '1.1.51'
+    publisherVersion = '4.0.0'
+    mavenVersion = "1.5"
+    bintrayVersion = "1.7.3"
+
+    classpaths = [
+            buildGradle : "com.android.tools.build:gradle:$buildGradleVersion",
+            publisher   : "com.saantiaguilera.gradle.publish.helper:core:$publisherVersion",
+            kotlin      : "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion",
+            bintray     : "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintrayVersion",
+            maven       : "com.github.dcendents:android-maven-gradle-plugin:$mavenVersion"
+    ]
 }

@@ -1,3 +1,5 @@
+apply plugin: 'saantiaguilera.bintray.publish'
+
 buildscript {
     apply from: 'dependencies.gradle'
 
@@ -7,8 +9,11 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:$buildGradleVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath classpaths.publisher
+        classpath classpaths.buildGradle
+        classpath classpaths.kotlin
+        classpath classpaths.maven
+        classpath classpaths.bintray
     }
 }
 
@@ -17,4 +22,18 @@ allprojects {
         google()
         jcenter()
     }
+    group = 'com.saantiaguilera.loquacious'
+    version = '1.0.0'
+}
+
+publishGlobalConfigurations {
+    bintrayRepository = 'maven'
+
+    githubUrl = "http://github.com/saantiaguilera/android-api-loquacious"
+
+    bintrayUser = System.getenv('BINTRAY_SANTI_USER')
+    bintrayApiKey = System.getenv('BINTRAY_SANTI_KEY')
+
+    licenseUrl = "http://www.opensource.org/licenses/BSD-3-Clause"
+    licenseName = "The 3-Clause BSD License"
 }
