@@ -1,6 +1,7 @@
 ext {
     _targetSdkVersion = 26
     _minSdkVersion = 14
+    _buildToolsVersion = "26.0.2"
 
     supportAnnotationsVersion = '26.1.0'
     ibmIcuVersion = '60.1'

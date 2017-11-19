@@ -6,6 +6,7 @@ apply from: 'dependencies.gradle'
 
 android {
     compileSdkVersion _targetSdkVersion
+    buildToolsVersion _buildToolsVersion
 
     defaultConfig {
         minSdkVersion _minSdkVersion
