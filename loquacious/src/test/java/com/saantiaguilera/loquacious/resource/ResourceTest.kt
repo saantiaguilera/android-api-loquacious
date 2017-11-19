@@ -167,7 +167,7 @@ class ResourceTest {
         try {
             resources.getQuantityString(1, 5, "")
             Assert.fail()
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) { }
     }
 
     @Test

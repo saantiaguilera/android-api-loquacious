@@ -22,45 +22,28 @@ class LoquaciousStore(context: Context, private val serializer: Serializer) : St
     }
 
     @CheckResult
-    private fun formatKey(key: String): String {
-        val current = LocaleUtil.current()
-        val language = if (current == null) "nil" else current.displayLanguage
-        return language + "_" + key
-    }
-
-    @CheckResult
-    private fun <Type> put(editor: SharedPreferences.Editor, item: Item<Type>): SharedPreferences.Editor {
-        return editor.putString(formatKey(item.key), serializer.serialize(item))
-    }
+    private fun formatKey(key: String): String = (LocaleUtil.current()?.displayLanguage ?: "nil") + "_" + key
 
     @SuppressLint("CommitPrefEdits")
-    override fun <Type> put(item: Item<Type>) {
-        put(sharedPreferences.edit(), item).apply()
+    override fun <Type> put(item: Item<Type>) = with(sharedPreferences.edit()) {
+        putString(formatKey(item.key), serializer.serialize(item))
+        apply()
     }
 
-    override fun <Type> putAll(items: List<Item<Type>>) {
-        var editor: SharedPreferences.Editor = sharedPreferences.edit()
-        for (item in items) {
-            editor = put(editor, item)
-        }
-        editor.apply()
+    override fun <Type> putAll(items: List<Item<Type>>) = with(sharedPreferences.edit()) {
+        items.forEach { item -> putString(formatKey(item.key), serializer.serialize(item)) }
+        apply()
     }
 
-    override fun clear() {
-        sharedPreferences.edit().clear().apply()
-    }
+    override fun clear() = sharedPreferences.edit().clear().apply()
 
     @CheckResult
-    override fun <Type> fetch(name: String, typeClass: Class<Type>): Item<Type>? {
-        val value = sharedPreferences.getString(formatKey(name), null)
-
-        return if (value != null) {
-            serializer.hidrate(value, typeClass)
-        } else null
-    }
+    override fun <Type> fetch(name: String, typeClass: Class<Type>): Item<Type>? =
+            sharedPreferences.getString(formatKey(name), "").let {
+                if (it.isEmpty()) null else serializer.hidrate(it, typeClass)
+            }
 
     companion object {
-
         private val STORE_SHARED_PREFERENCES = LoquaciousStore::class.java.name + "_sharedPreferences"
     }
 

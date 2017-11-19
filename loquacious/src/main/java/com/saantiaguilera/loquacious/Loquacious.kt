@@ -17,32 +17,29 @@ import java.util.Locale
 /**
  * Created by saguilera on 11/18/17.
  */
-
-class Loquacious private constructor(context: Context, serializer: Serializer) : OnLocaleChanged, LocaleSubscribable {
+class Loquacious private constructor(context: Context, serializer: Serializer) : OnLocaleChanged,
+        LocaleSubscribable {
 
     private val resources: Resources
-    private val onLocaleChangedList: MutableList<OnLocaleChanged>
+    private val onLocaleChangedList by lazy { ArrayList<OnLocaleChanged>() }
 
     init {
-        onLocaleChangedList = ArrayList()
         context.registerReceiver(LocaleBroadcastReceiver(),
                 IntentFilter(Intent.ACTION_LOCALE_CHANGED))
         resources = Resources(context, serializer)
     }
 
     override fun onLocaleChanged(locale: Locale) {
-        for (subscriptor in onLocaleChangedList) {
-            subscriptor.onLocaleChanged(locale)
+        onLocaleChangedList.forEach {
+            it.onLocaleChanged(locale)
         }
     }
 
-    override fun subscribe(subscriptor: OnLocaleChanged): Boolean {
-        return !onLocaleChangedList.contains(subscriptor) && onLocaleChangedList.add(subscriptor)
-    }
+    override fun subscribe(subscriptor: OnLocaleChanged): Boolean =
+            !onLocaleChangedList.contains(subscriptor) && onLocaleChangedList.add(subscriptor)
 
-    override fun unsubscribe(subscriptor: OnLocaleChanged): Boolean {
-        return !onLocaleChangedList.contains(subscriptor) || onLocaleChangedList.add(subscriptor)
-    }
+    override fun unsubscribe(subscriptor: OnLocaleChanged): Boolean =
+            !onLocaleChangedList.contains(subscriptor) || onLocaleChangedList.add(subscriptor)
 
     companion object {
 
@@ -53,16 +50,9 @@ class Loquacious private constructor(context: Context, serializer: Serializer) :
             loquacious = Loquacious(context, serializer)
         }
 
-        fun getInstance(): Loquacious {
-            if (loquacious == null) {
-                throw IllegalStateException("Loquacious is not initialized!")
-            }
-            return loquacious as Loquacious
-        }
+        fun getInstance(): Loquacious = loquacious!!
 
-        fun getResources(): Resources {
-            return getInstance().resources
-        }
+        fun getResources(): Resources = getInstance().resources
     }
 
 }

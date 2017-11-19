@@ -13,8 +13,7 @@ import com.saantiaguilera.loquacious.util.LocaleUtil
 
 class LocaleBroadcastReceiver : BroadcastReceiver() {
 
-    override fun onReceive(context: Context, intent: Intent) {
-        Loquacious.getInstance().onLocaleChanged(LocaleUtil.setSystemLocale(context))
-    }
+    override fun onReceive(context: Context, intent: Intent) =
+            Loquacious.getInstance().onLocaleChanged(LocaleUtil.setSystemLocale(context))
 
 }

@@ -14,20 +14,13 @@ enum class Quantity {
     MANY,
     OTHER;
 
-    override fun toString(): String {
-        return super.toString().toLowerCase()
-    }
+    override fun toString(): String = super.toString().toLowerCase()
 
     companion object {
 
         fun from(rules: PluralRules, quantity: Int): Quantity? {
-            val plural = rules.select(quantity.toDouble()).toLowerCase()
-            for (enumerable in values()) {
-                if (enumerable.toString().contentEquals(plural)) {
-                    return enumerable
-                }
-            }
-            return null
+            val plural by lazy { rules.select(quantity.toDouble()).toLowerCase() }
+            return values().firstOrNull { it.toString().contentEquals(plural) }
         }
     }
 }

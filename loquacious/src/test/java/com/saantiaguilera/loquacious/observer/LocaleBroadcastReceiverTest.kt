@@ -38,10 +38,20 @@ class LocaleBroadcastReceiverTest {
 
     @Test
     fun test_LocaleChanges_DispatchesToLoquacious() {
-        var loquacious = Mockito.mock(Loquacious::class.java)
-        ReflectionHelpers.setField(loquacious, "onLocaleChangedList", ArrayList<Any>())
-        loquacious = Mockito.spy(loquacious)
+        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
+            override fun <T> serialize(item: Item<T>): String {
+                return Gson().toJson(item)
+            }
+
+            override fun <T> hidrate(string: String, classType: Class<T>): Item<T> {
+                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
+
+                }.type)
+            }
+        })
+        var loquacious = Mockito.spy(Loquacious.getInstance())
         ReflectionHelpers.setStaticField(Loquacious::class.java, "loquacious", loquacious)
+
         LocaleBroadcastReceiver().onReceive(RuntimeEnvironment.application, Intent())
 
         Mockito.verify(loquacious).onLocaleChanged(any())

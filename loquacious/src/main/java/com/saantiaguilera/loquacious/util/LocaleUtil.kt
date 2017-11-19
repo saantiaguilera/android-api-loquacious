@@ -9,9 +9,7 @@ import java.util.Locale
 /**
  * Created by saguilera on 11/18/17.
  */
-
-class LocaleUtil @Throws(IllegalAccessException::class)
-private constructor() {
+class LocaleUtil @Throws(IllegalAccessException::class) private constructor() {
 
     init {
         throw IllegalAccessException("Cant instantiate this")
@@ -23,20 +21,15 @@ private constructor() {
 
         @TargetApi(Build.VERSION_CODES.N)
         fun setSystemLocale(context: Context): Locale {
-            val locale: Locale
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                locale = context.resources.configuration.locales.get(0)
-                current = locale
-                return locale
+                current = context.resources.configuration.locales.get(0)
+                return current!!
             }
-            locale = context.resources.configuration.locale
-            current = locale
-            return locale
+            current = context.resources.configuration.locale
+            return current!!
         }
 
-        fun current(): Locale? {
-            return current
-        }
+        fun current(): Locale? = current
     }
 
 }
