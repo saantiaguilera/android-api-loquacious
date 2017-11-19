@@ -18,14 +18,14 @@ android {
 }
 
 dependencies {
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion"
-    implementation 'com.android.support:support-annotations:26.1.0'
-    implementation "com.ibm.icu:icu4j:60.1"
+    implementation dependency.implementation.kotlin
+    implementation dependency.implementation.support.annotations
+    implementation dependency.implementation.icu
 
-    testImplementation 'junit:junit:4.12'
-    testImplementation "org.robolectric:robolectric:3.5.1"
-    testImplementation "org.mockito:mockito-core:2.8.9"
-    testImplementation "com.google.code.gson:gson:2.8.2"
+    testImplementation dependency.test.junit
+    testImplementation dependency.test.robolectric
+    testImplementation dependency.test.mockito
+    testImplementation dependency.test.gson
 }
 
 apply from: 'jacoco.gradle'

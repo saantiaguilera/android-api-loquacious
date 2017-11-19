@@ -1,4 +1,28 @@
 ext {
     _targetSdkVersion = 26
     _minSdkVersion = 14
+
+    supportAnnotationsVersion = '26.1.0'
+    ibmIcuVersion = '60.1'
+    junitVersion = '4.12'
+    robolectricVersion = '3.5.1'
+    mockitoVersion = '2.8.9'
+    gsonVersion = '2.8.2'
+
+    dependency = [
+            implementation : [
+                    kotlin      : "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlinVersion",
+                    icu         : "com.ibm.icu:icu4j:$ibmIcuVersion",
+                    support     : [
+                            annotations : "com.android.support:support-annotations:$supportAnnotationsVersion"
+                    ]
+            ],
+
+            test           : [
+                    junit       : "junit:junit:$junitVersion",
+                    robolectric : "org.robolectric:robolectric:$robolectricVersion",
+                    mockito     : "org.mockito:mockito-core:$mockitoVersion",
+                    gson        : "com.google.code.gson:gson:$gsonVersion"
+            ]
+    ]
 }
