@@ -54,7 +54,7 @@ class LocaleBroadcastReceiverTest {
 
         LocaleBroadcastReceiver().onReceive(RuntimeEnvironment.application, Intent())
 
-        Mockito.verify(loquacious).onLocaleChanged(any())
+        Mockito.verify(loquacious)(any())
     }
 
     @Test

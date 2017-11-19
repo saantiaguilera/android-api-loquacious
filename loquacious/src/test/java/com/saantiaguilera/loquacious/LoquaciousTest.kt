@@ -99,8 +99,7 @@ class LoquaciousTest {
             }
         })
 
-        val onLocaleChanged = Mockito.spy(OnLocaleChanged::class.java)
-        Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
+        Assert.assertTrue(Loquacious.getInstance().subscribe({}))
     }
 
     @Test
@@ -117,7 +116,9 @@ class LoquaciousTest {
             }
         })
 
-        val onLocaleChanged = Mockito.spy(OnLocaleChanged::class.java)
+        var onLocaleChanged = { locale: Locale -> }
+        onLocaleChanged = Mockito.spy(onLocaleChanged)
+
         Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
         Assert.assertFalse(Loquacious.getInstance().subscribe(onLocaleChanged))
     }
@@ -136,7 +137,9 @@ class LoquaciousTest {
             }
         })
 
-        val onLocaleChanged = Mockito.spy(OnLocaleChanged::class.java)
+        var onLocaleChanged = { locale: Locale -> }
+        onLocaleChanged = Mockito.spy(onLocaleChanged)
+
         Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
         Assert.assertTrue(Loquacious.getInstance().unsubscribe(onLocaleChanged))
     }
@@ -155,7 +158,9 @@ class LoquaciousTest {
             }
         })
 
-        val onLocaleChanged = Mockito.spy(OnLocaleChanged::class.java)
+        var onLocaleChanged = { locale: Locale -> }
+        onLocaleChanged = Mockito.spy(onLocaleChanged)
+
         Assert.assertTrue(Loquacious.getInstance().unsubscribe(onLocaleChanged))
     }
 
@@ -173,12 +178,14 @@ class LoquaciousTest {
             }
         })
 
-        val onLocaleChanged = Mockito.spy(OnLocaleChanged::class.java)
+        var onLocaleChanged = { locale: Locale -> }
+        onLocaleChanged = Mockito.spy(onLocaleChanged)
+
         Assert.assertTrue(Loquacious.getInstance().subscribe(onLocaleChanged))
 
         LocaleBroadcastReceiver().onReceive(RuntimeEnvironment.application, Intent())
 
-        Mockito.verify(onLocaleChanged).onLocaleChanged(any())
+        Mockito.verify(onLocaleChanged).invoke(any())
     }
 
 }

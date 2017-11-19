@@ -21,7 +21,7 @@ class Loquacious private constructor(context: Context, serializer: Serializer) :
         LocaleSubscribable {
 
     private val resources: Resources
-    private val onLocaleChangedList by lazy { ArrayList<OnLocaleChanged>() }
+    private val onLocaleChangedList by lazy { ArrayList<(Locale) -> Unit>() }
 
     init {
         context.registerReceiver(LocaleBroadcastReceiver(),
@@ -29,16 +29,14 @@ class Loquacious private constructor(context: Context, serializer: Serializer) :
         resources = Resources(context, serializer)
     }
 
-    override fun onLocaleChanged(locale: Locale) {
-        onLocaleChangedList.forEach {
-            it.onLocaleChanged(locale)
-        }
+    override fun invoke(locale: Locale) {
+        onLocaleChangedList.forEach { it(locale) }
     }
 
-    override fun subscribe(subscriptor: OnLocaleChanged): Boolean =
+    override fun subscribe(subscriptor: (Locale) -> Unit): Boolean =
             !onLocaleChangedList.contains(subscriptor) && onLocaleChangedList.add(subscriptor)
 
-    override fun unsubscribe(subscriptor: OnLocaleChanged): Boolean =
+    override fun unsubscribe(subscriptor: (Locale) -> Unit): Boolean =
             !onLocaleChangedList.contains(subscriptor) || onLocaleChangedList.add(subscriptor)
 
     companion object {
