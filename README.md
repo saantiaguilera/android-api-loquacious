@@ -14,7 +14,7 @@ and more. The aim of this library is:
 
 ## Usage
 
-TBD
+Please refer to the [wiki](https://github.com/saantiaguilera/android-api-loquacious/wiki) for usage and installation
 
 ## License
 
