@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 apply from: 'dependencies.gradle'
-apply from: 'jacoco.gradle'
 
 android {
     compileSdkVersion _targetSdkVersion
@@ -28,3 +27,5 @@ dependencies {
     testImplementation "org.mockito:mockito-core:2.8.9"
     testImplementation "com.google.code.gson:gson:2.8.2"
 }
+
+apply from: 'jacoco.gradle'
