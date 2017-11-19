@@ -17,6 +17,13 @@ and more. The aim of this library is:
 
 Please refer to the [wiki](https://github.com/saantiaguilera/android-api-loquacious/wiki) for usage and installation
 
+## Future
+
+- Wrap BaseContext so you have the resources always
+- Create independent stores, to give support also to different screen densities or stuff
+- Create independent decentralized stores, so we could also make images or raw files demandable and not just primitives
+- Store the reified generic instead of the whole item
+
 ## License
 
 BSD License
