@@ -14,7 +14,7 @@ import java.util.*
 /**
  * Created by saguilera on 11/18/17.
  */
-class Loquacious private constructor(context: Context, serializer: Serializer) : OnLocaleChanged,
+class Loquacious private constructor(context: Context) : OnLocaleChanged,
         LocaleSubscribable {
 
     private val resources: Resources
@@ -23,7 +23,7 @@ class Loquacious private constructor(context: Context, serializer: Serializer) :
     init {
         context.registerReceiver(LocaleBroadcastReceiver(),
                 IntentFilter(Intent.ACTION_LOCALE_CHANGED))
-        resources = Resources(context, serializer)
+        resources = Resources(context)
     }
 
     override fun invoke(locale: Locale) {
@@ -44,10 +44,16 @@ class Loquacious private constructor(context: Context, serializer: Serializer) :
         val resources
             get() = Loquacious.instance.resources
 
-        fun initialize(context: Context, serializer: Serializer) {
+        fun initialize(context: Context) {
             LocaleUtil.setSystemLocale(context)
-            instance = Loquacious(context, serializer)
+            instance = Loquacious(context)
         }
+
+        /**
+         * Wraps the context in a new one. Useful if you want to use the remote resources
+         * in XMLs or natively as activity.resources instead of Loquacious.resources
+         */
+        fun wrap(context: Context) = ContextWrapper.wrap(context)
 
     }
 

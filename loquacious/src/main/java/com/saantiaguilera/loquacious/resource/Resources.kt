@@ -9,6 +9,8 @@ import com.saantiaguilera.loquacious.model.Quantity
 import com.saantiaguilera.loquacious.parse.Serializer
 import com.saantiaguilera.loquacious.persistence.LoquaciousStore
 import com.saantiaguilera.loquacious.persistence.Store
+import com.saantiaguilera.loquacious.persistence.put
+import com.saantiaguilera.loquacious.persistence.putAll
 import com.saantiaguilera.loquacious.util.LocaleUtil
 import com.saantiaguilera.loquacious.util.Mangler
 
@@ -16,18 +18,18 @@ import com.saantiaguilera.loquacious.util.Mangler
  * Created by saguilera on 11/18/17.
  */
 @Suppress("DEPRECATION")
-class Resources(context: Context, serializer: Serializer) :
+class Resources(context: Context) :
         android.content.res.Resources(
                 context.assets,
                 context.resources.displayMetrics,
                 context.resources.configuration
         ) {
 
-    private val store: LoquaciousStore = LoquaciousStore(context, serializer)
+    val store: LoquaciousStore = LoquaciousStore(context)
 
     @CheckResult
     private inline fun <reified ReturnType> fetch(entryName: String): ReturnType? =
-            store.fetch(entryName, ReturnType::class.java)?.value
+            store.fetch(entryName, ReturnType::class)
 
     @CheckResult
     private inline fun <reified ReturnType> get(id: Int): ReturnType? =
@@ -69,10 +71,10 @@ class Resources(context: Context, serializer: Serializer) :
 
     @Throws(NotFoundException::class)
     override fun getText(id: Int): CharSequence =
-            get(id) ?: super.getText(id)
+            get<String>(id) ?: super.getText(id)
 
     override fun getText(id: Int, def: CharSequence): CharSequence =
-            get(id) ?: super.getText(id, def)
+            get<String>(id) ?: super.getText(id, def)
 
     @Throws(NotFoundException::class)
     override fun getTextArray(id: Int): Array<CharSequence> =
@@ -80,7 +82,7 @@ class Resources(context: Context, serializer: Serializer) :
 
     @Throws(NotFoundException::class)
     override fun getQuantityText(id: Int, quantity: Int): CharSequence =
-            get(id, quantity) ?: super.getQuantityText(id, quantity)
+            get<String>(id, quantity) ?: super.getQuantityText(id, quantity)
 
     @Throws(NotFoundException::class)
     override fun getInteger(id: Int): Int =
@@ -115,18 +117,16 @@ class Resources(context: Context, serializer: Serializer) :
     /**
      * Delegate
      */
-    fun <Type> put(item: Item<Type>) =
-            store.put(Mangler.mangle(getResourceEntryName(item.key), item.quantity), item)
+    inline fun <reified Type> put(item: Item<Type>) =
+            store.put(Mangler.mangle(getResourceEntryName(item.key), item.quantity), item.value)
 
     /**
      * Delegate
      */
-    fun <Type> putAll(items: List<Item<Type>>) =
+    inline fun <reified Type> putAll(items: List<Item<Type>>) =
             store.putAll(
-                    items.map {
-                        item -> Mangler.mangle(getResourceEntryName(item.key), item.quantity)
-                    },
-                    items
+                    items.map { Mangler.mangle(getResourceEntryName(it.key), it.quantity) },
+                    items.map { it.value }
             )
 
     /**

@@ -22,27 +22,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var helloWorldText: TextView
 
     /**
-     * This should be done in an Application class
-     */
-    private fun initializeLoquacious() {
-        Loquacious.initialize(this, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
-            }
-        })
-    }
-
-    /**
      * We subscribe to locale changes, so we ask again the server for its localized strings
      */
     private fun subscribe() = Loquacious.instance.subscribe { locale -> request(locale.displayLanguage) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initializeLoquacious()
         subscribe()
 
         super.onCreate(savedInstanceState)

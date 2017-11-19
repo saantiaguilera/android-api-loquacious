@@ -3,11 +3,7 @@ package com.saantiaguilera.loquacious.observer
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.saantiaguilera.loquacious.Loquacious
-import com.saantiaguilera.loquacious.model.Item
-import com.saantiaguilera.loquacious.parse.Serializer
 import com.saantiaguilera.loquacious.util.LocaleUtil
 import org.junit.After
 import org.junit.Test
@@ -34,16 +30,8 @@ class LocaleBroadcastReceiverTest {
 
     @Test
     fun test_LocaleChanges_DispatchesToLoquacious() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
-            }
-        })
-        var loquacious = Mockito.spy(Loquacious.instance)
+        Loquacious.initialize(RuntimeEnvironment.application)
+        val loquacious = Mockito.spy(Loquacious.instance)
         ReflectionHelpers.setStaticField(Loquacious::class.java, "instance", loquacious)
 
         LocaleBroadcastReceiver().onReceive(RuntimeEnvironment.application, Intent())
@@ -53,17 +41,7 @@ class LocaleBroadcastReceiverTest {
 
     @Test
     fun test_LocaleChanges_SetsNewLocale() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
-            }
-        })
+        Loquacious.initialize(RuntimeEnvironment.application)
 
         val context = Mockito.spy<Application>(RuntimeEnvironment.application)
 

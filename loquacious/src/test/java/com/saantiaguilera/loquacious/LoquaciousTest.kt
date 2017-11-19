@@ -1,11 +1,7 @@
 package com.saantiaguilera.loquacious
 
 import android.content.Intent
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.observer.LocaleBroadcastReceiver
-import com.saantiaguilera.loquacious.parse.Serializer
 import com.saantiaguilera.loquacious.util.LocaleUtil
 import org.junit.After
 import org.junit.Assert
@@ -49,66 +45,27 @@ class LoquaciousTest {
 
     @Test
     fun test_Initialization_CreatesInstance() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {}.type)
-            }
-        })
-
+        Loquacious.initialize(RuntimeEnvironment.application)
         Assert.assertNotNull(Loquacious.instance)
     }
 
     @Test
     fun test_Resources_Exist_IfInitialized() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
-            }
-        })
+        Loquacious.initialize(RuntimeEnvironment.application)
 
         Assert.assertNotNull(Loquacious.resources)
     }
 
     @Test
     fun test_Adding_Subscriptor() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
-            }
-        })
+        Loquacious.initialize(RuntimeEnvironment.application)
 
         Assert.assertTrue(Loquacious.instance.subscribe({}))
     }
 
     @Test
     fun test_Adding_Subscriptor_WontHappenTwice() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
-            }
-        })
+        Loquacious.initialize(RuntimeEnvironment.application)
 
         var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
@@ -119,17 +76,7 @@ class LoquaciousTest {
 
     @Test
     fun test_Removing_Subscriptor() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
-            }
-        })
+        Loquacious.initialize(RuntimeEnvironment.application)
 
         var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
@@ -140,17 +87,7 @@ class LoquaciousTest {
 
     @Test
     fun test_Removing_NonExistentSubscriptor_IsTrue() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
-            }
-        })
+        Loquacious.initialize(RuntimeEnvironment.application)
 
         var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
@@ -160,17 +97,7 @@ class LoquaciousTest {
 
     @Test
     fun test_LocaleChanged_NotifiesSubscriptors() {
-        Loquacious.initialize(RuntimeEnvironment.application, object : Serializer {
-            override fun <T> serialize(item: Item<T>): String {
-                return Gson().toJson(item)
-            }
-
-            override fun <T> hydrate(string: String, classType: Class<T>): Item<T> {
-                return Gson().fromJson(string, object : TypeToken<Item<T>>() {
-
-                }.type)
-            }
-        })
+        Loquacious.initialize(RuntimeEnvironment.application)
 
         var onLocaleChanged = { _: Locale -> }
         onLocaleChanged = Mockito.spy(onLocaleChanged)
