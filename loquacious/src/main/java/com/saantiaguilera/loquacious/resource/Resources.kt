@@ -21,7 +21,7 @@ class Resources(context: Context, serializer: Serializer) :
                 context.assets,
                 context.resources.displayMetrics,
                 context.resources.configuration
-        ), Store.Commit, Store.Clear {
+        ) {
 
     private val store: LoquaciousStore = LoquaciousStore(context, serializer)
 
@@ -115,16 +115,23 @@ class Resources(context: Context, serializer: Serializer) :
     /**
      * Delegate
      */
-    override fun <Type> put(item: Item<Type>) = store.put(item)
+    fun <Type> put(item: Item<Type>) =
+            store.put(Mangler.mangle(getResourceEntryName(item.key), item.quantity), item)
 
     /**
      * Delegate
      */
-    override fun <Type> putAll(items: List<Item<Type>>) = store.putAll(items)
+    fun <Type> putAll(items: List<Item<Type>>) =
+            store.putAll(
+                    items.map {
+                        item -> Mangler.mangle(getResourceEntryName(item.key), item.quantity)
+                    },
+                    items
+            )
 
     /**
      * Delegate
      */
-    override fun clear() = store.clear()
+    fun clear() = store.clear()
 
 }

@@ -18,6 +18,7 @@ class Mangler @Throws(IllegalAccessException::class) private constructor() {
 
         private fun filterResFromKey(key: String): String {
             return key.replace(Regex("^R\\.$resources\\."), "")
+                    .replace("^android\\R\\.$resources\\.", "")
         }
 
         fun mangle(key: String, quantity: Quantity): String {

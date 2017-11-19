@@ -41,7 +41,8 @@ class Loquacious private constructor(context: Context, serializer: Serializer) :
         lateinit var instance: Loquacious
             private set
 
-        val resources get() = Loquacious.instance.resources
+        val resources
+            get() = Loquacious.instance.resources
 
         fun initialize(context: Context, serializer: Serializer) {
             LocaleUtil.setSystemLocale(context)

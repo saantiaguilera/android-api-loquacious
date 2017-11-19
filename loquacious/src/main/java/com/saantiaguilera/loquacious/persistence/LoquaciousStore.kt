@@ -24,13 +24,13 @@ class LoquaciousStore(context: Context, private val serializer: Serializer) : St
     private fun formatKey(key: String): String = (LocaleUtil.current()?.displayLanguage ?: "nil") + "_" + key
 
     @SuppressLint("CommitPrefEdits")
-    override fun <Type> put(item: Item<Type>) = with(sharedPreferences.edit()) {
-        putString(formatKey(item.key), serializer.serialize(item))
+    override fun <Type> put(key: String, item: Item<Type>) = with(sharedPreferences.edit()) {
+        putString(formatKey(key), serializer.serialize(item))
         apply()
     }
 
-    override fun <Type> putAll(items: List<Item<Type>>) = with(sharedPreferences.edit()) {
-        items.forEach { item -> putString(formatKey(item.key), serializer.serialize(item)) }
+    override fun <Type> putAll(key: List<String>, items: List<Item<Type>>) = with(sharedPreferences.edit()) {
+        key.zip(items).forEach { (key,item) -> putString(formatKey(key), serializer.serialize(item)) }
         apply()
     }
 

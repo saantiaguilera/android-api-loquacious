@@ -15,9 +15,9 @@ interface Store {
     }
 
     interface Commit {
-        fun <Type> put(item: Item<Type>)
+        fun <Type> put(key: String, item: Item<Type>)
 
-        fun <Type> putAll(items: List<Item<Type>>)
+        fun <Type> putAll(key: List<String>, items: List<Item<Type>>)
     }
 
     interface Clear {
