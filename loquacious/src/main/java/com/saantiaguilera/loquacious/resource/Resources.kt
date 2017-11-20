@@ -5,6 +5,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
 import android.support.annotation.CheckResult
+import android.support.annotation.RestrictTo
 import com.ibm.icu.text.PluralRules
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.model.Quantity
@@ -25,6 +26,7 @@ class Resources(context: Context) :
                 context.resources.configuration
         ) {
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     var stores: List<Store> = ArrayList()
         private set
 
@@ -35,6 +37,7 @@ class Resources(context: Context) :
         stores = stores.toMutableList().apply { add(store) }
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     @Suppress("DEPRECATION")
     @TargetApi(Build.VERSION_CODES.N)
     fun currentLocale(): Locale {
@@ -210,11 +213,11 @@ class Resources(context: Context) :
 
     /**
      * Clear all items.
-     * @param resourceType: If specified, it will only clear the ones matching the resourceType
+     * @param store: If specified, it will only clear that store
      */
     @SuppressLint("CheckResult")
-    fun clear(resourceType: String? = null) =
-            stores.filter { if (resourceType == null) true else it.accepts(resourceType) }
+    fun clear(store: KClass<Store>? = null) =
+            stores.filter { if (store == null) true else it::class.java == store.java }
                     .forEach { it.clear() }
 
 }
