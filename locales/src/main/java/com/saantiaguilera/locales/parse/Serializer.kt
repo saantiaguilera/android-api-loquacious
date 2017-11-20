@@ -1,4 +1,4 @@
-package com.saantiaguilera.loquacious.parse
+package com.saantiaguilera.locales.parse
 
 import kotlin.reflect.KClass
 

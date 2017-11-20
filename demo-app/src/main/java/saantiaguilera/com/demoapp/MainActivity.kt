@@ -5,12 +5,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.TextView
 import android.widget.Toast
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.saantiaguilera.locales.observer.subscribe
+import com.saantiaguilera.locales.util.LocaleUtil
 import com.saantiaguilera.loquacious.Loquacious
 import com.saantiaguilera.loquacious.model.Item
-import com.saantiaguilera.loquacious.parse.Serializer
-import com.saantiaguilera.loquacious.util.LocaleUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,12 +18,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var helloWorldText: TextView
+    private lateinit var helloWorldText: TextView
 
     /**
      * We subscribe to locale changes, so we ask again the server for its localized strings
      */
-    private fun subscribe() = Loquacious.instance.subscribe { locale -> request(locale.displayLanguage) }
+    private fun subscribe() = Loquacious.instance.subscribe { locale -> request(locale.toString()) }
 
     override fun attachBaseContext(newBase: Context?) = super.attachBaseContext(Loquacious.wrap(newBase!!))
 
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         // Request the locale for the starting settings. We should ofc do this only once to avoid
         // useless api calls
-        request(LocaleUtil.current()?.displayLanguage!!)
+        request(LocaleUtil.current()?.toString()!!)
     }
 
     fun updateHelloWorld() {

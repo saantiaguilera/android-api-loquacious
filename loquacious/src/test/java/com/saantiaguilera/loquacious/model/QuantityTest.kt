@@ -1,14 +1,13 @@
 package com.saantiaguilera.loquacious.model
 
 import com.ibm.icu.text.PluralRules
-import com.saantiaguilera.loquacious.util.LocaleUtil
 
 import org.junit.Assert
 
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.RuntimeEnvironment
+import java.util.*
 
 /**
  * Created by saguilera on 11/18/17.
@@ -18,7 +17,7 @@ class QuantityTest {
 
     @Test
     fun test_QuantityGetsParsedCorrectly_FromPlurals() {
-        val rules = PluralRules.forLocale(LocaleUtil.setSystemLocale(RuntimeEnvironment.application))
+        val rules = PluralRules.forLocale(Locale.ENGLISH)
         Assert.assertEquals(Quantity.OTHER, Quantity.from(rules, 10))
     }
 

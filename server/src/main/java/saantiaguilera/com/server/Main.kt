@@ -11,9 +11,9 @@ class Main {
             get("/hello/:locale") {
                 status(200)
                 val string = when (params(":locale")) {
-                    "English", "english" -> "{ \"text\": \"Hello World!\" }"
-                    "Spanish", "spanish", "Español", "español" -> "{ \"text\": \"Hola Mundo!\" }"
-                    "Swedish", "Sverige", "Svenska", "svenska", "sverige", "swedish" -> "{ \"text\": \"Hej världen!\" }"
+                    "en", "en_US" -> "{ \"text\": \"Hello World!\" }"
+                    "es" -> "{ \"text\": \"Hola Mundo!\" }"
+                    "sv" -> "{ \"text\": \"Hej världen!\" }"
                     else -> {
                         "{ \"text\": \"Locale not supported :(\" }"
                     }

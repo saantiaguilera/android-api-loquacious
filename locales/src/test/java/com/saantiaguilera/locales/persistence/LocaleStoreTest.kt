@@ -1,10 +1,12 @@
-package com.saantiaguilera.loquacious.persistence
+package com.saantiaguilera.locales.persistence
 
+import com.saantiaguilera.locales.util.LocaleUtil
+import com.saantiaguilera.locales.util.MockDto
 import com.saantiaguilera.loquacious.Loquacious
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.model.Quantity
-import com.saantiaguilera.loquacious.util.LocaleUtil
-import com.saantiaguilera.loquacious.utils.MockDto
+import com.saantiaguilera.loquacious.persistence.put
+import com.saantiaguilera.loquacious.persistence.putAll
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -19,14 +21,14 @@ import java.util.*
  * Created by saguilera on 11/18/17.
  */
 @RunWith(RobolectricTestRunner::class)
-class LoquaciousStoreTest {
+class LocaleStoreTest {
 
-    private var store: LoquaciousStore? = null
+    private var store: LocaleStore? = null
 
     @Before
     fun setUp() {
         Loquacious.initialize(RuntimeEnvironment.application)
-        store = LoquaciousStore(RuntimeEnvironment.application)
+        store = LocaleStore(RuntimeEnvironment.application)
     }
 
     @After

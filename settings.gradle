@@ -1,1 +1,1 @@
-include ':loquacious', ':demo-app', ':server'
+include ':loquacious', ':demo-app', ':server', ':locales'

@@ -7,20 +7,15 @@ Loquacious is a library for saving resources (Strings, booleans, whatever) in a 
 
 My main objective (please know that this is a proof of concept) is to try to reduce the APK size more
 and more. The aim of this library is:
-- Having your own server that will have your resources (and you will query based on the locale the user has setted / changed)
+- Having your own server that will have your resources (and you will query based on the system features the user has setted / changed)
 - Having empty resources in your APK, not separated by different archs/densities/locales/whatever. This way:
   * We reduce the .arsc table, as there are not repetitions nor empty trashings
   * We reduce the resources files, since they are all empty (and will be queried to your back end)
-  * The developer still feels and interacts with the system as usual
+  * The developer still feels and interacts with the system as usual, so we dont harass the environment
 
 ## Usage
 
 Please refer to the [wiki](https://github.com/saantiaguilera/android-api-loquacious/wiki) for usage and installation
-
-## Future enhacements
-
-- Create independent stores, to give support also to different system features (eg screen densities)
-- Create independent decentralized stores, so we could also make images or raw files demandable and not just String wrapped stuff
 
 ## License
 

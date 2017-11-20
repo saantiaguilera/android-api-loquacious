@@ -1,4 +1,4 @@
-package com.saantiaguilera.loquacious.util
+package com.saantiaguilera.locales.util
 
 import android.annotation.TargetApi
 import android.content.Context

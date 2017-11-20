@@ -19,13 +19,13 @@ android {
 }
 
 dependencies {
+    implementation project(':loquacious')
+
     implementation dependency.implementation.kotlin
     implementation dependency.implementation.support.annotations
-    implementation dependency.implementation.icu
+    implementation dependency.implementation.gson
 
     testImplementation dependency.test.junit
     testImplementation dependency.test.robolectric
     testImplementation dependency.test.mockito
 }
-
-apply from: 'jacoco.gradle'

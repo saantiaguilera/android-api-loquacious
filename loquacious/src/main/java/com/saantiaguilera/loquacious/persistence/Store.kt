@@ -8,21 +8,14 @@ import kotlin.reflect.KClass
  */
 interface Store {
 
-    interface Fetch {
-        @CheckResult
-        fun <Type> fetch(name: String, klass: KClass<*>): Type?
-    }
+    @CheckResult
+    fun <Type> fetch(key: String, klass: KClass<*>): Type?
 
-    interface Commit {
-        fun <Type> put(key: String, item: Type, klass: KClass<*>)
+    fun <Type> put(key: String, item: Type, klass: KClass<*>)
 
-        fun <Type> putAll(kv: List<Pair<String, Type>>, klass: KClass<*>)
-    }
+    fun <Type> putAll(kv: List<Pair<String, Type>>, klass: KClass<*>)
 
-    interface Clear {
-        fun clear()
-    }
-
+    fun clear()
 }
 
 /**
@@ -30,5 +23,5 @@ interface Store {
  * should call.
  * Still, we will implement the above, having the class as the "reified parameter"
  */
-inline fun <reified Type> Store.Commit.put(key: String, item: Type) = put(key, item, Type::class)
-inline fun <reified Type> Store.Commit.putAll(kv: List<Pair<String, Type>>) = putAll(kv, Type::class)
+inline fun <reified Type> Store.put(key: String, item: Type) = put(key, item, Type::class)
+inline fun <reified Type> Store.putAll(kv: List<Pair<String, Type>>) = putAll(kv, Type::class)

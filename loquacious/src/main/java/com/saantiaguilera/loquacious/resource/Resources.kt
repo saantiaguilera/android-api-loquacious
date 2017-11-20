@@ -1,15 +1,17 @@
 package com.saantiaguilera.loquacious.resource
 
+import android.annotation.TargetApi
 import android.content.Context
+import android.os.Build
 import android.support.annotation.CheckResult
 import com.ibm.icu.text.PluralRules
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.model.Quantity
-import com.saantiaguilera.loquacious.persistence.LoquaciousStore
+import com.saantiaguilera.loquacious.persistence.Store
 import com.saantiaguilera.loquacious.persistence.put
 import com.saantiaguilera.loquacious.persistence.putAll
-import com.saantiaguilera.loquacious.util.LocaleUtil
-import com.saantiaguilera.loquacious.util.Mangler
+import com.saantiaguilera.loquacious.util.Mangler.Companion.mangle
+import java.util.*
 
 /**
  * Resources class for getting resources.
@@ -22,7 +24,20 @@ class Resources(context: Context) :
                 context.resources.configuration
         ) {
 
-    val store: LoquaciousStore = LoquaciousStore(context)
+    lateinit var store: Store
+
+    fun with(store: Store) {
+        this.store = store
+    }
+
+    @Suppress("DEPRECATION")
+    @TargetApi(Build.VERSION_CODES.N)
+    fun currentLocale(): Locale {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return configuration.locales.get(0)
+        }
+        return configuration.locale
+    }
 
     //------------------------------------ Generic Getters ---------------------------------------//
 
@@ -48,19 +63,17 @@ class Resources(context: Context) :
      */
     @CheckResult
     inline fun <reified ReturnType> get(id: Int): ReturnType? =
-            get(Mangler.mangle(getResourceEntryName(id)))
+            get(mangle(getResourceEntryName(id)))
 
     /**
      * Get a generic resource based on its ResId + quantity plural
      */
     @CheckResult
     inline fun <reified ReturnType> get(id: Int, quantity: Int): ReturnType? =
-            get(
-                Mangler.mangle(
+            get(mangle(
                         getResourceEntryName(id),
-                        Quantity.from(PluralRules.forLocale(LocaleUtil.current()), quantity)!!
-                )
-            )
+                        Quantity.from(PluralRules.forLocale(currentLocale()), quantity)!!
+            ))
 
     //------------------------------------- Resources getter -------------------------------------//
 
@@ -75,7 +88,7 @@ class Resources(context: Context) :
      */
     @Throws(NotFoundException::class)
     override fun getString(id: Int, vararg formatArgs: Any): String =
-            String.format(LocaleUtil.current()!!, getString(id), *formatArgs)
+            String.format(currentLocale(), getString(id), *formatArgs)
 
     /**
      * Inherits javadoc
@@ -96,7 +109,7 @@ class Resources(context: Context) :
      */
     @Throws(NotFoundException::class)
     override fun getQuantityString(id: Int, quantity: Int, vararg formatArgs: Any): String =
-            String.format(LocaleUtil.current()!!, getQuantityString(id, quantity), *formatArgs)
+            String.format(currentLocale(), getQuantityString(id, quantity), *formatArgs)
 
     /**
      * Inherits javadoc
@@ -179,14 +192,14 @@ class Resources(context: Context) :
      * locale
      */
     inline fun <reified Type> put(item: Item<Type>) =
-            store.put(Mangler.mangle(getResourceEntryName(item.key), item.quantity), item.value)
+            store.put(mangle(getResourceEntryName(item.key), item.quantity), item.value)
 
     /**
      * Put whichever batch of items you'd like into the resources. These items will be stored for the
      * current locale
      */
     inline fun <reified Type> putAll(items: List<Item<Type>>) =
-            store.putAll(items.map { Pair(Mangler.mangle(getResourceEntryName(it.key), it.quantity), it.value) })
+            store.putAll(items.map { Pair(mangle(getResourceEntryName(it.key), it.quantity), it.value) })
 
     /**
      * Clear all the items stored. This applies for all the locales (not just the current)

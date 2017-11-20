@@ -1,10 +1,10 @@
-package com.saantiaguilera.loquacious.observer
+package com.saantiaguilera.locales.observer
 
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import com.saantiaguilera.locales.util.LocaleUtil
 import com.saantiaguilera.loquacious.Loquacious
-import com.saantiaguilera.loquacious.util.LocaleUtil
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +20,7 @@ import java.util.*
 @RunWith(RobolectricTestRunner::class)
 class LocaleBroadcastReceiverTest {
 
-    fun any() = Mockito.any(Locale::class.java) ?: Locale("en-US")
+    private fun any() = Mockito.any(Locale::class.java) ?: Locale.ENGLISH
 
     @After
     fun tearDown() {
@@ -38,19 +38,6 @@ class LocaleBroadcastReceiverTest {
         LocaleBroadcastReceiver().onReceive(RuntimeEnvironment.application, Intent())
 
         Mockito.verify(loquacious)(any())
-    }
-
-    @Test
-    fun test_LocaleChanges_SetsNewLocale() {
-        Loquacious.initialize(RuntimeEnvironment.application)
-
-        val context = Mockito.spy<Application>(RuntimeEnvironment.application)
-
-        LocaleBroadcastReceiver().onReceive(context, Intent())
-
-        // To avoid including power mock, this is my best change of verifying that we are trying to obtain
-        // the current locale
-        Mockito.verify<Context>(context).resources
     }
 
 }

@@ -1,8 +1,5 @@
 package com.saantiaguilera.loquacious
 
-import android.content.Intent
-import com.saantiaguilera.loquacious.observer.LocaleBroadcastReceiver
-import com.saantiaguilera.loquacious.util.LocaleUtil
 import org.junit.After
 import org.junit.Assert
 import org.junit.Test
@@ -24,7 +21,6 @@ class LoquaciousTest {
     @After
     fun tearDown() {
         ReflectionHelpers.setStaticField(Loquacious::class.java, "instance", null)
-        ReflectionHelpers.setStaticField(LocaleUtil::class.java, "current", null)
         ReflectionHelpers.setStaticField(Loquacious::class.java, "initialized", false)
     }
 
@@ -55,59 +51,6 @@ class LoquaciousTest {
         Loquacious.initialize(RuntimeEnvironment.application)
 
         Assert.assertNotNull(Loquacious.resources)
-    }
-
-    @Test
-    fun test_Adding_Subscriptor() {
-        Loquacious.initialize(RuntimeEnvironment.application)
-
-        Assert.assertTrue(Loquacious.instance.subscribe({}))
-    }
-
-    @Test
-    fun test_Adding_Subscriptor_WontHappenTwice() {
-        Loquacious.initialize(RuntimeEnvironment.application)
-
-        var onLocaleChanged = { _: Locale -> }
-        onLocaleChanged = Mockito.spy(onLocaleChanged)
-
-        Assert.assertTrue(Loquacious.instance.subscribe(onLocaleChanged))
-        Assert.assertFalse(Loquacious.instance.subscribe(onLocaleChanged))
-    }
-
-    @Test
-    fun test_Removing_Subscriptor() {
-        Loquacious.initialize(RuntimeEnvironment.application)
-
-        var onLocaleChanged = { _: Locale -> }
-        onLocaleChanged = Mockito.spy(onLocaleChanged)
-
-        Assert.assertTrue(Loquacious.instance.subscribe(onLocaleChanged))
-        Assert.assertTrue(Loquacious.instance.unsubscribe(onLocaleChanged))
-    }
-
-    @Test
-    fun test_Removing_NonExistentSubscriptor_IsTrue() {
-        Loquacious.initialize(RuntimeEnvironment.application)
-
-        var onLocaleChanged = { _: Locale -> }
-        onLocaleChanged = Mockito.spy(onLocaleChanged)
-
-        Assert.assertTrue(Loquacious.instance.unsubscribe(onLocaleChanged))
-    }
-
-    @Test
-    fun test_LocaleChanged_NotifiesSubscriptors() {
-        Loquacious.initialize(RuntimeEnvironment.application)
-
-        var onLocaleChanged = { _: Locale -> }
-        onLocaleChanged = Mockito.spy(onLocaleChanged)
-
-        Assert.assertTrue(Loquacious.instance.subscribe(onLocaleChanged))
-
-        LocaleBroadcastReceiver().onReceive(RuntimeEnvironment.application, Intent())
-
-        Mockito.verify(onLocaleChanged).invoke(any())
     }
 
 }

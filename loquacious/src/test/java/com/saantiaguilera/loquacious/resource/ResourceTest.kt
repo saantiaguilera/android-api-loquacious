@@ -1,11 +1,9 @@
 package com.saantiaguilera.loquacious.resource
 
-import android.content.SharedPreferences
 import com.saantiaguilera.loquacious.Loquacious
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.model.Quantity
-import com.saantiaguilera.loquacious.persistence.LoquaciousStore
-import com.saantiaguilera.loquacious.util.LocaleUtil
+import com.saantiaguilera.loquacious.utils.MockStore
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -29,31 +27,29 @@ class ResourceTest {
     fun setUp() {
         Loquacious.initialize(RuntimeEnvironment.application)
         resources = Resources(RuntimeEnvironment.application)
+        resources!!.with(MockStore())
     }
 
     @After
     fun tearDown() {
         ReflectionHelpers.setStaticField(Loquacious::class.java, "instance", null)
-        ReflectionHelpers.setStaticField(LocaleUtil::class.java, "current", null)
         ReflectionHelpers.setStaticField(Loquacious::class.java, "initialized", false)
         resources = null
     }
 
     @Test
     fun test_PuttingA_SingleResource() {
-        val store = ReflectionHelpers.getField<LoquaciousStore>(resources, "store")
-        val sp = ReflectionHelpers.getField<SharedPreferences>(store, "sharedPreferences")
+        val store: MockStore = ReflectionHelpers.getField<MockStore>(resources, "store")
 
         val item = Item(android.R.string.cut, "test string")
         resources!!.put(item)
 
-        Assert.assertEquals(1, sp.all.size)
+        Assert.assertEquals(1, store.list.size)
     }
 
     @Test
     fun test_Putting_MultipleResources() {
-        val store = ReflectionHelpers.getField<LoquaciousStore>(resources, "store")
-        val sp = ReflectionHelpers.getField<SharedPreferences>(store, "sharedPreferences")
+        val store: MockStore = ReflectionHelpers.getField<MockStore>(resources, "store")
 
         val item1 = Item(android.R.string.cut, "test string")
         val item2 = Item(android.R.string.copy, "test string1")
@@ -62,7 +58,7 @@ class ResourceTest {
         list.add(item2)
         resources!!.putAll(list)
 
-        Assert.assertEquals(2, sp.all.size)
+        Assert.assertEquals(2, store.list.size)
     }
 
     @Test
@@ -74,14 +70,13 @@ class ResourceTest {
         list.add(item2)
         resources!!.putAll(list)
 
-        val store = ReflectionHelpers.getField<LoquaciousStore>(resources, "store")
-        val sp = ReflectionHelpers.getField<SharedPreferences>(store, "sharedPreferences")
+        val store: MockStore = ReflectionHelpers.getField<MockStore>(resources, "store")
 
-        Assert.assertEquals(2, sp.all.size)
+        Assert.assertEquals(2, store.list.size)
 
         resources!!.clear()
 
-        Assert.assertEquals(0, sp.all.size)
+        Assert.assertEquals(0, store.list.size)
     }
 
     @Test
@@ -99,37 +94,29 @@ class ResourceTest {
 
     @Test
     fun test_Retrieving_StringArray() {
-        val list = arrayOf("test string 1", "test string 2")
+        val list = ArrayList<String>()
+        list.add("test string 1")
+        list.add("test string 2")
         resources!!.put(Item(android.R.string.cut, list))
 
-        Assert.assertEquals("test string 1", resources!!.getStringArray(android.R.string.cut)[0])
-        Assert.assertEquals("test string 2", resources!!.getStringArray(android.R.string.cut)[1])
+        val arr: Array<String> = resources!!.getStringArray(android.R.string.cut)
+
+        Assert.assertEquals("test string 1", arr[0])
+        Assert.assertEquals("test string 2", arr[1])
     }
 
     @Test
     fun test_Retrieving_QuantityString() {
         resources!!.put(Item(android.R.string.cut, "test string", Quantity.ONE))
 
-        // This is correct
         Assert.assertEquals("test string", resources!!.getQuantityString(android.R.string.cut, 1))
-        // This shouldnt be
-        try {
-            resources!!.getQuantityString(android.R.string.cut, 5)
-            Assert.fail()
-        } catch (ignored: Exception) { }
     }
 
     @Test
     fun test_Retrieving_QuantityFormattedString() {
         resources!!.put(Item(android.R.string.cut, "test %1\$s", Quantity.ONE))
 
-        // This is correct
         Assert.assertEquals("test string", resources!!.getQuantityString(android.R.string.cut, 1, "string"))
-        // This shouldnt be
-        try {
-            resources!!.getQuantityString(android.R.string.cut, 5, "")
-            Assert.fail()
-        } catch (ignored: Exception) { }
     }
 
     @Test
@@ -155,43 +142,42 @@ class ResourceTest {
 
     @Test
     fun test_Retrieving_TextArray() {
-        val list = arrayOf("test string 1", "test string 2")
+        val list = ArrayList<String>()
+        list.add("test string 1")
+        list.add("test string 2")
         resources!!.put(Item(android.R.string.cut, list))
 
-        Assert.assertEquals("test string 1", resources!!.getTextArray(android.R.string.cut)[0])
-        Assert.assertEquals("test string 2", resources!!.getTextArray(android.R.string.cut)[1])
+        val arr: Array<CharSequence> = resources!!.getTextArray(android.R.string.cut)
+        Assert.assertEquals("test string 1", arr[0])
+        Assert.assertEquals("test string 2", arr[1])
     }
 
     @Test
     fun test_Retrieving_QuantityText() {
-        resources!!.put(Item(android.R.string.cut, "test string"))
+        resources!!.put(Item(android.R.string.cut, "test string", Quantity.ONE))
 
-        // This is correct
         Assert.assertEquals("test string", resources!!.getQuantityText(android.R.string.cut, 1))
-        // This shouldnt be
-        try {
-            Assert.assertNull(resources!!.getQuantityText(android.R.string.cut, 5))
-            Assert.fail()
-        } catch (ex: Exception) {
-            Assert.assertTrue(ex is UnsupportedOperationException)
-        }
-
     }
 
     @Test
     fun test_Retrieving_Integer() {
-        resources!!.put(Item(android.R.string.cut, 14))
+        resources!!.put(Item(android.R.string.cut, 14.0))
 
         Assert.assertEquals(14, resources!!.getInteger(android.R.string.cut))
     }
 
     @Test
     fun test_Retrieving_IntegerArray() {
-        resources!!.put(Item(android.R.string.cut, intArrayOf(1, 2, 3)))
+        val list = ArrayList<Int>()
+        list.add(1)
+        list.add(2)
+        list.add(3)
+        resources!!.put(Item(android.R.string.cut, list))
 
-        Assert.assertEquals(1, resources!!.getIntArray(android.R.string.cut)[0])
-        Assert.assertEquals(2, resources!!.getIntArray(android.R.string.cut)[1])
-        Assert.assertEquals(3, resources!!.getIntArray(android.R.string.cut)[2])
+        val arr: IntArray = resources!!.getIntArray(android.R.string.cut)
+        Assert.assertEquals(1, arr[0])
+        Assert.assertEquals(2, arr[1])
+        Assert.assertEquals(3, arr[2])
     }
 
     @Test

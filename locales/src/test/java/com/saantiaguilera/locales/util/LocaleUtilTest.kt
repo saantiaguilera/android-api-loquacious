@@ -1,6 +1,5 @@
-package com.saantiaguilera.loquacious.utils
+package com.saantiaguilera.locales.util
 
-import com.saantiaguilera.loquacious.util.LocaleUtil
 import org.junit.After
 import org.junit.Assert
 import org.junit.Test
