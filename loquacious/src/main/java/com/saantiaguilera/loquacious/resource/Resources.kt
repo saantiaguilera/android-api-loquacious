@@ -1,5 +1,6 @@
 package com.saantiaguilera.loquacious.resource
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
 import android.os.Build
@@ -9,9 +10,9 @@ import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.model.Quantity
 import com.saantiaguilera.loquacious.persistence.Store
 import com.saantiaguilera.loquacious.persistence.put
-import com.saantiaguilera.loquacious.persistence.putAll
 import com.saantiaguilera.loquacious.util.Mangler.Companion.mangle
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * Resources class for getting resources.
@@ -24,10 +25,14 @@ class Resources(context: Context) :
                 context.resources.configuration
         ) {
 
-    lateinit var store: Store
+    var stores: List<Store> = ArrayList()
+        private set
 
     fun with(store: Store) {
-        this.store = store
+        if (stores.find { it.javaClass == store.javaClass } != null) {
+            throw IllegalStateException("There's already a store of this type")
+        }
+        stores = stores.toMutableList().apply { add(store) }
     }
 
     @Suppress("DEPRECATION")
@@ -42,38 +47,26 @@ class Resources(context: Context) :
     //------------------------------------ Generic Getters ---------------------------------------//
 
     /**
-     * Although we support a normal resource. We also provide this three methods
-     * for getting whatever localized resource you have.
-     * Lets say you want to save user data based on locales? No problem, simply create an Item<User>
-     * and according to the locale save it. You can query it back with whichever of these 3 methods
-     * fits you finest
+     * Base method, lets you retrieve a generic resource.
+     *
+     * @param id: Id of the element, per android resources (eg R.id.something)
+     * @param quantity: Optional quantity if the resource is a plural
+     * @param store: Specific store class to search at, else it will look in all the ones that
+     * accept this kind of resource and return the first nonnull element fetched
+     *
+     * @return element if exists, null otherwise
      */
-
-    /**
-     * Get a generic resource based on the saved entry name
-     * Careful this entryName is probably mangled.
-     * This method should be the least of the options you should pick
-     */
+    @SuppressLint("CheckResult")
     @CheckResult
-    inline fun <reified ReturnType> get(entryName: String): ReturnType? =
-            store.fetch(entryName, ReturnType::class)
-
-    /**
-     * Get a generic resource based on its ResId
-     */
-    @CheckResult
-    inline fun <reified ReturnType> get(id: Int): ReturnType? =
-            get(mangle(getResourceEntryName(id)))
-
-    /**
-     * Get a generic resource based on its ResId + quantity plural
-     */
-    @CheckResult
-    inline fun <reified ReturnType> get(id: Int, quantity: Int): ReturnType? =
-            get(mangle(
-                        getResourceEntryName(id),
-                        Quantity.from(PluralRules.forLocale(currentLocale()), quantity)!!
-            ))
+    inline fun <reified ReturnType> get(id: Int, quantity: Int = 1, store: KClass<Store>? = null): ReturnType? {
+        val resourceName = getResourceName(id)
+        val quantityBoxed = Quantity.from(PluralRules.forLocale(currentLocale()), quantity)!!
+        return stores
+                .filter { if (store == null) true else store.java == it::class.java }
+                .filter { it.accepts(resourceName) }
+                .map { it.fetch<ReturnType>(mangle(resourceName, quantityBoxed), ReturnType::class) }
+                .firstOrNull { it != null }
+    }
 
     //------------------------------------- Resources getter -------------------------------------//
 
@@ -188,22 +181,40 @@ class Resources(context: Context) :
     //------------------------------------- Store interface --------------------------------------//
 
     /**
-     * Put whichever item you'd like into the resources. This item will be stored for the current
-     * locale
+     * Put whichever item you'd like into the resources. This item will be stored for the first store
+     * that matches the item type, unless a store is specified, in which case (if it accepts the item)
+     * it will be stored
+     *
+     * @param item: item to add
+     * @param store: store class to add the item in, if not specified it will be the first one that matches
+     * the item type from the currents. The specified store must accept this type of item if specified
      */
-    inline fun <reified Type> put(item: Item<Type>) =
-            store.put(mangle(getResourceEntryName(item.key), item.quantity), item.value)
+    @SuppressLint("CheckResult")
+    inline fun <reified Type> put(item: Item<Type>, store: KClass<Store>? = null) {
+        val resourceName = getResourceName(item.key)
+        stores.filter { if (store == null) true else it::class.java == store.java }
+                .firstOrNull { it.accepts(resourceName) }!!
+                .put(mangle(resourceName, item.quantity), item.value)
+    }
 
     /**
-     * Put whichever batch of items you'd like into the resources. These items will be stored for the
-     * current locale
+     * Put whichever batch of items you'd like into the resources. These items will be stored for
+     * the first store that matches the item resource, or the specified store
+     * @param items: batch of items to store (can correspond to different stores, if store is not specified
+     * @param store: force all items (that accept the store, else it wont happen anything) to be stored
+     * in that specific store
      */
-    inline fun <reified Type> putAll(items: List<Item<Type>>) =
-            store.putAll(items.map { Pair(mangle(getResourceEntryName(it.key), it.quantity), it.value) })
+    inline fun <reified Type> putAll(items: List<Item<Type>>, store: KClass<Store>? = null) {
+        items.forEach { item -> put(item, store) }
+    }
 
     /**
-     * Clear all the items stored. This applies for all the locales (not just the current)
+     * Clear all items.
+     * @param resourceType: If specified, it will only clear the ones matching the resourceType
      */
-    fun clear() = store.clear()
+    @SuppressLint("CheckResult")
+    fun clear(resourceType: String? = null) =
+            stores.filter { if (resourceType == null) true else it.accepts(resourceType) }
+                    .forEach { it.clear() }
 
 }

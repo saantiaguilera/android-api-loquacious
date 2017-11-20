@@ -6,7 +6,6 @@ import com.saantiaguilera.loquacious.Loquacious
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.model.Quantity
 import com.saantiaguilera.loquacious.persistence.put
-import com.saantiaguilera.loquacious.persistence.putAll
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -44,19 +43,6 @@ class LocaleStoreTest {
         store!!.put("copy", item.value)
 
         Assert.assertEquals(item.value, store!!.fetch("copy", String::class))
-    }
-
-    @Test
-    fun test_PutAllItems_EffectivelyStoresThem_InPhysicalMemmory() {
-        val stringItem = Item<Any>(android.R.string.copy, "value")
-        val boolItem = Item<Any>(android.R.string.copyUrl, true)
-        val intItem = Item<Any>(android.R.string.cut, 149.0)
-        val items = Arrays.asList(stringItem, boolItem, intItem)
-        store!!.putAll(items.map { Pair(RuntimeEnvironment.application.resources.getResourceEntryName(it.key), it.value) })
-
-        Assert.assertEquals(stringItem.value, store!!.fetch("copy", stringItem.value::class))
-        Assert.assertEquals(boolItem.value, store!!.fetch("copyUrl", boolItem.value::class))
-        Assert.assertEquals(intItem.value, store!!.fetch("cut", intItem.value::class))
     }
 
     @Test

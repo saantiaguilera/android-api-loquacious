@@ -22,12 +22,10 @@ class MockStore : Store {
         list.add(Item(0, item))
     }
 
-    override fun <Type> putAll(kv: List<Pair<String, Type>>, klass: KClass<*>) {
-        kv.forEach { (_,v) -> list.add(Item(0, v)) }
-    }
-
     override fun clear() {
         list.clear()
     }
+
+    override fun accepts(element: String) = true
 
 }

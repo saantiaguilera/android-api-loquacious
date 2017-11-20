@@ -3,6 +3,7 @@ package com.saantiaguilera.loquacious.resource
 import com.saantiaguilera.loquacious.Loquacious
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.model.Quantity
+import com.saantiaguilera.loquacious.persistence.Store
 import com.saantiaguilera.loquacious.utils.MockStore
 import org.junit.After
 import org.junit.Assert
@@ -39,7 +40,7 @@ class ResourceTest {
 
     @Test
     fun test_PuttingA_SingleResource() {
-        val store: MockStore = ReflectionHelpers.getField<MockStore>(resources, "store")
+        val store: MockStore = resources!!.stores[0] as MockStore
 
         val item = Item(android.R.string.cut, "test string")
         resources!!.put(item)
@@ -49,7 +50,7 @@ class ResourceTest {
 
     @Test
     fun test_Putting_MultipleResources() {
-        val store: MockStore = ReflectionHelpers.getField<MockStore>(resources, "store")
+        val store: MockStore = resources!!.stores[0] as MockStore
 
         val item1 = Item(android.R.string.cut, "test string")
         val item2 = Item(android.R.string.copy, "test string1")
@@ -70,11 +71,29 @@ class ResourceTest {
         list.add(item2)
         resources!!.putAll(list)
 
-        val store: MockStore = ReflectionHelpers.getField<MockStore>(resources, "store")
+        val store: MockStore = resources!!.stores[0] as MockStore
 
         Assert.assertEquals(2, store.list.size)
 
         resources!!.clear()
+
+        Assert.assertEquals(0, store.list.size)
+    }
+
+    @Test
+    fun test_Clearing_StringResources() {
+        val item1 = Item(android.R.string.cut, "test string")
+        val item2 = Item(android.R.string.copy, "test string1")
+        val list = ArrayList<Item<String>>()
+        list.add(item1)
+        list.add(item2)
+        resources!!.putAll(list)
+
+        val store: MockStore = resources!!.stores[0] as MockStore
+
+        Assert.assertEquals(2, store.list.size)
+
+        resources!!.clear("string")
 
         Assert.assertEquals(0, store.list.size)
     }

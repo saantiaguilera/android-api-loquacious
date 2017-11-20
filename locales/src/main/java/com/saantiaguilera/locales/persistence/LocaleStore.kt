@@ -39,11 +39,6 @@ class LocaleStore(context: Context) : Store {
         apply()
     }
 
-    override fun <Type> putAll(kv: List<Pair<String, Type>>, klass: KClass<*>) = with(sharedPreferences.edit()) {
-        kv.forEach { (key,item) -> putString(formatKey(key), serializer.serialize(item, klass)) }
-        apply()
-    }
-
     override fun clear() = sharedPreferences.edit().clear().apply()
 
     @CheckResult
@@ -54,6 +49,11 @@ class LocaleStore(context: Context) : Store {
 
     companion object {
         private val STORE_SHARED_PREFERENCES = LocaleStore::class.java.name + "_sharedPreferences"
+    }
+
+    override fun accepts(element: String): Boolean {
+        // TODO("For now this store doesnt accept drawable tyes, as we store plain text")
+        return !element.contains(":drawable/")
     }
 
 }
