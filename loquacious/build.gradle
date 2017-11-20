@@ -12,20 +12,16 @@ android {
         minSdkVersion _minSdkVersion
         targetSdkVersion _targetSdkVersion
     }
-
-    testOptions.unitTests {
-        includeAndroidResources = true
-    }
 }
 
 dependencies {
-    implementation dependency.implementation.kotlin
-    implementation dependency.implementation.support.annotations
-    implementation dependency.implementation.icu
+    compile dependency.implementation.kotlin
+    compile dependency.implementation.support.annotations
+    compile dependency.implementation.icu
 
-    testImplementation dependency.test.junit
-    testImplementation dependency.test.robolectric
-    testImplementation dependency.test.mockito
+    testCompile dependency.test.junit
+    testCompile dependency.test.robolectric
+    testCompile dependency.test.mockito
 }
 
 apply from: 'jacoco.gradle'

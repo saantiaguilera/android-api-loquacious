@@ -4,7 +4,7 @@ buildscript {
     apply from: 'dependencies.gradle'
 
     repositories {
-        google()
+        maven { url 'https://maven.google.com' }
         jcenter()
     }
 
@@ -19,11 +19,11 @@ buildscript {
 
 allprojects {
     repositories {
-        google()
+        maven { url 'https://maven.google.com' }
         jcenter()
     }
     group = 'com.saantiaguilera.loquacious'
-    version = '1.0.0'
+    version = '1.1.0'
 }
 
 publishGlobalConfigurations {
@@ -35,5 +35,5 @@ publishGlobalConfigurations {
     bintrayApiKey = System.getenv('BINTRAY_SANTI_KEY')
 
     licenseUrl = "http://www.opensource.org/licenses/BSD-3-Clause"
-    licenseName = "The 3-Clause BSD License"
+    licenseName = "BSD 3-Clause"
 }
