@@ -67,13 +67,10 @@ def createReportTask(def variant) {
                         '**/*$ViewInjector*.*',
                         '**/*$ViewBinder*.*',
                         '**/Manifest*.*',
-                        '**/*$Lambda$*.*',
-                        '**/*Module.*',
                         '**/*Dagger*.*',
                         '**/*MembersInjector*.*',
                         '**/*_Provide*Factory*.*',
                         '**/*_Factory*.*',
-                        '**/*$*$*.*'
                 ])
         reportTask.reports {
             csv.enabled false
@@ -84,7 +81,7 @@ def createReportTask(def variant) {
 }
 
 def sourceDirs(variant) {
-    variant.sourceSets.allSource.srcDirs.collect { it.path }.flatten()
+    variant.sourceSets.java.srcDirs.collect { it.path }.flatten()
 }
 
 def classesDir(variant) {
