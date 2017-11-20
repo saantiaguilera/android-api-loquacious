@@ -16,5 +16,5 @@ interface Serializer {
  * should call.
  * Still, we will implement the above, having the class as the "reified parameter"
  */
-inline fun <reified T> Serializer.serialize(value: T): String = serialize(value, T::class)
-inline fun <reified T> Serializer.hydrate(value: String): T = hydrate(value, T::class)
+inline fun <reified Type> Serializer.serialize(value: Type): String = serialize(value, Type::class)
+inline fun <reified Type> Serializer.hydrate(value: String): Type = hydrate(value, Type::class)

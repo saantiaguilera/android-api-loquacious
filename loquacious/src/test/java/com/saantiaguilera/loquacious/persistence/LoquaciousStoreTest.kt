@@ -49,10 +49,7 @@ class LoquaciousStoreTest {
         val boolItem = Item<Any>(android.R.string.copyUrl, true)
         val intItem = Item<Any>(android.R.string.cut, 149.0)
         val items = Arrays.asList(stringItem, boolItem, intItem)
-        store!!.putAll(
-                items.map { RuntimeEnvironment.application.resources.getResourceEntryName(it.key) },
-                items.map { it.value }
-        )
+        store!!.putAll(items.map { Pair(RuntimeEnvironment.application.resources.getResourceEntryName(it.key), it.value) })
 
         Assert.assertEquals(stringItem.value, store!!.fetch("copy", stringItem.value::class))
         Assert.assertEquals(boolItem.value, store!!.fetch("copyUrl", boolItem.value::class))

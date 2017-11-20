@@ -186,10 +186,7 @@ class Resources(context: Context) :
      * current locale
      */
     inline fun <reified Type> putAll(items: List<Item<Type>>) =
-            store.putAll(
-                    items.map { Mangler.mangle(getResourceEntryName(it.key), it.quantity) },
-                    items.map { it.value }
-            )
+            store.putAll(items.map { Pair(Mangler.mangle(getResourceEntryName(it.key), it.quantity), it.value) })
 
     /**
      * Clear all the items stored. This applies for all the locales (not just the current)

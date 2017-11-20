@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.annotation.CheckResult
+import com.saantiaguilera.loquacious.model.Item
 
 import com.saantiaguilera.loquacious.parse.GsonSerializer
 import com.saantiaguilera.loquacious.parse.Serializer
@@ -31,8 +32,8 @@ class LoquaciousStore(context: Context) : Store.Fetch, Store.Clear, Store.Commit
         apply()
     }
 
-    override fun <Type> putAll(key: List<String>, items: List<Type>, klass: KClass<*>) = with(sharedPreferences.edit()) {
-        key.zip(items).forEach { (key,item) -> putString(formatKey(key), serializer.serialize(item, klass)) }
+    override fun <Type> putAll(kv: List<Pair<String, Type>>, klass: KClass<*>) = with(sharedPreferences.edit()) {
+        kv.forEach { (key,item) -> putString(formatKey(key), serializer.serialize(item, klass)) }
         apply()
     }
 

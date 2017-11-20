@@ -1,6 +1,7 @@
 package com.saantiaguilera.loquacious.persistence
 
 import android.support.annotation.CheckResult
+import com.saantiaguilera.loquacious.model.Item
 
 import kotlin.reflect.KClass
 
@@ -17,7 +18,7 @@ interface Store {
     interface Commit {
         fun <Type> put(key: String, item: Type, klass: KClass<*>)
 
-        fun <Type> putAll(key: List<String>, items: List<Type>, klass: KClass<*>)
+        fun <Type> putAll(kv: List<Pair<String, Type>>, klass: KClass<*>)
     }
 
     interface Clear {
@@ -31,5 +32,5 @@ interface Store {
  * should call.
  * Still, we will implement the above, having the class as the "reified parameter"
  */
-inline fun <reified T> Store.Commit.put(key: String, item: T) = put(key, item, T::class)
-inline fun <reified T> Store.Commit.putAll(keys: List<String>, items: List<T>) = putAll(keys, items, T::class)
+inline fun <reified Type> Store.Commit.put(key: String, item: Type) = put(key, item, Type::class)
+inline fun <reified Type> Store.Commit.putAll(kv: List<Pair<String, Type>>) = putAll(kv, Type::class)
