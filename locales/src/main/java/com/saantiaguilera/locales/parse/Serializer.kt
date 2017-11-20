@@ -1,10 +1,12 @@
 package com.saantiaguilera.locales.parse
 
+import android.support.annotation.RestrictTo
 import kotlin.reflect.KClass
 
 /**
  * Created by saguilera on 11/18/17.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 interface Serializer {
     fun <Type> serialize(value: Type, klass: KClass<*>): String
 
