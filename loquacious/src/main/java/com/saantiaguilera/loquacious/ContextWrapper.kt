@@ -8,9 +8,7 @@ import android.content.res.Resources
  */
 class ContextWrapper(base: Context) : android.content.ContextWrapper(base) {
 
-    override fun getResources(): Resources {
-        return Loquacious.resources
-    }
+    override fun getResources() = Loquacious.resources
 
     companion object {
 
