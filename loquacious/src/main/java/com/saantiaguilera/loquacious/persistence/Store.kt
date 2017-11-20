@@ -1,8 +1,6 @@
 package com.saantiaguilera.loquacious.persistence
 
 import android.support.annotation.CheckResult
-import com.saantiaguilera.loquacious.model.Item
-
 import kotlin.reflect.KClass
 
 /**

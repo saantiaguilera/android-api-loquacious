@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.annotation.CheckResult
-import com.saantiaguilera.loquacious.model.Item
 
 import com.saantiaguilera.loquacious.parse.GsonSerializer
 import com.saantiaguilera.loquacious.parse.Serializer
