@@ -84,7 +84,7 @@ def createReportTask(def variant) {
 }
 
 def sourceDirs(variant) {
-    variant.sourceSets.java.srcDirs.collect { it.path }.flatten()
+    variant.sourceSets.allSource.srcDirs.collect { it.path }.flatten()
 }
 
 def classesDir(variant) {

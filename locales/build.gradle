@@ -25,3 +25,5 @@ dependencies {
     testCompile dependency.test.robolectric
     testCompile dependency.test.mockito
 }
+
+apply from: 'jacoco.gradle'
