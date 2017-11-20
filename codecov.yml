@@ -1,24 +1,31 @@
-codecov:
-  notify:
-    require_ci_to_pass: yes
-    after_n_builds: 1
-    wait_for_ci: no
-  branch: master
-
 coverage:
   status:
-    patch:
-      default: off
-      pr_coverage:
-        target: 75%
     project:
       default: off
       minimum:
-        target: 75%
+        target: 70%
       decrement:
         target: auto
         threshold: 0.5%
         if_not_found: success
+      loquacious:
+        target: 70%
+        flags: loquacious
+      locales:
+        target: 70%
+        flags: locales
+    patch:
+      default: off
+      pr_coverage:
+        target: 70%
+flags:
+  loquacious:
+    paths:
+      - loquacious/src/main/java/com/saantiaguilera/loquacious
+flags:
+  locales:
+    paths:
+      - locales/src/main/java/com/saantiaguilera/locales
 comment:
   layout: "diff, flags"
   behavior: default
