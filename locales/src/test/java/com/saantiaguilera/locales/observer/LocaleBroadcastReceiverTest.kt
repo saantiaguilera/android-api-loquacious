@@ -1,7 +1,5 @@
 package com.saantiaguilera.locales.observer
 
-import android.app.Application
-import android.content.Context
 import android.content.Intent
 import com.saantiaguilera.locales.util.LocaleUtil
 import com.saantiaguilera.loquacious.Loquacious

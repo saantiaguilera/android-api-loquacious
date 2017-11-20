@@ -56,4 +56,5 @@ object DimensionConverter {
     }
 
     private class InternalDimension internal constructor(internal var value: Float, internal var unit: Int)
+
 }

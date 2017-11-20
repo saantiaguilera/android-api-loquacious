@@ -3,7 +3,6 @@ package com.saantiaguilera.loquacious.resource
 import com.saantiaguilera.loquacious.Loquacious
 import com.saantiaguilera.loquacious.model.Item
 import com.saantiaguilera.loquacious.model.Quantity
-import com.saantiaguilera.loquacious.persistence.Store
 import com.saantiaguilera.loquacious.utils.MockStore
 import org.junit.After
 import org.junit.Assert
