@@ -35,6 +35,7 @@ class ResourceTest {
     fun tearDown() {
         ReflectionHelpers.setStaticField(Loquacious::class.java, "instance", null)
         ReflectionHelpers.setStaticField(LocaleUtil::class.java, "current", null)
+        ReflectionHelpers.setStaticField(LocaleUtil::class.java, "initialized", false)
         resources = null
     }
 
