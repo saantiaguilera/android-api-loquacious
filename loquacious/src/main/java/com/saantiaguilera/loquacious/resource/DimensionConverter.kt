@@ -5,7 +5,7 @@ import android.util.TypedValue
 import java.util.*
 import java.util.regex.Pattern
 
-object DimensionConverter {
+internal object DimensionConverter {
 
     private val dimensionConstantLookup = initDimensionConstantLookup()
     private val DIMENSION_PATTERN = Pattern.compile("^\\s*(\\d+(\\.\\d+)*)\\s*([a-zA-Z]+)\\s*$")

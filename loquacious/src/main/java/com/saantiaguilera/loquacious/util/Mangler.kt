@@ -1,10 +1,12 @@
 package com.saantiaguilera.loquacious.util
 
+import android.support.annotation.RestrictTo
 import com.saantiaguilera.loquacious.model.Quantity
 
 /**
  * Created by saguilera on 11/18/17.
  */
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class Mangler @Throws(IllegalAccessException::class) private constructor() {
 
     init {

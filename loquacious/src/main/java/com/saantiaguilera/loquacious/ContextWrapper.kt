@@ -5,7 +5,7 @@ import android.content.Context
 /**
  * Created by saguilera on 11/19/17.
  */
-class ContextWrapper(base: Context) : android.content.ContextWrapper(base) {
+internal class ContextWrapper(base: Context) : android.content.ContextWrapper(base) {
 
     override fun getResources() = Loquacious.resources
 
