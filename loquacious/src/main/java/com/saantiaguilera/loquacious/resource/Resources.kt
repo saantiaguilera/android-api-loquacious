@@ -61,7 +61,7 @@ class Resources(context: Context) :
      */
     @SuppressLint("CheckResult")
     @CheckResult
-    inline fun <reified ReturnType> get(id: Int, quantity: Int = 1, store: KClass<Store>? = null): ReturnType? {
+    inline fun <reified ReturnType> get(id: Int, quantity: Int = 1, store: KClass<out Store>? = null): ReturnType? {
         val resourceName = getResourceName(id)
         val quantityBoxed = Quantity.from(PluralRules.forLocale(currentLocale()), quantity)!!
         return stores
@@ -193,7 +193,7 @@ class Resources(context: Context) :
      * the item type from the currents. The specified store must accept this type of item if specified
      */
     @SuppressLint("CheckResult")
-    inline fun <reified Type> put(item: Item<Type>, store: KClass<Store>? = null) {
+    inline fun <reified Type> put(item: Item<Type>, store: KClass<out Store>? = null) {
         val resourceName = getResourceName(item.key)
         stores.filter { if (store == null) true else it::class.java == store.java }
                 .firstOrNull { it.accepts(resourceName) }!!
@@ -207,7 +207,7 @@ class Resources(context: Context) :
      * @param store: force all items (that accept the store, else it wont happen anything) to be stored
      * in that specific store
      */
-    inline fun <reified Type> putAll(items: List<Item<Type>>, store: KClass<Store>? = null) {
+    inline fun <reified Type> putAll(items: List<Item<Type>>, store: KClass<out Store>? = null) {
         items.forEach { item -> put(item, store) }
     }
 
@@ -216,7 +216,7 @@ class Resources(context: Context) :
      * @param store: If specified, it will only clear that store
      */
     @SuppressLint("CheckResult")
-    fun clear(store: KClass<Store>? = null) =
+    fun clear(store: KClass<out Store>? = null) =
             stores.filter { if (store == null) true else it::class.java == store.java }
                     .forEach { it.clear() }
 

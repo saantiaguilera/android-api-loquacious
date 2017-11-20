@@ -93,7 +93,7 @@ class ResourceTest {
 
         Assert.assertEquals(2, store.list.size)
 
-        resources!!.clear("string")
+        resources!!.clear(MockStore::class)
 
         Assert.assertEquals(0, store.list.size)
     }
