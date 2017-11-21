@@ -1,6 +1,6 @@
 ext {
     buildGradleVersion = '2.3.1'
-    kotlinVersion = '1.1.51'
+    kotlinVersion = '1.1.60'
     publisherVersion = '4.0.0'
     mavenVersion = "1.5"
     bintrayVersion = "1.7.3"

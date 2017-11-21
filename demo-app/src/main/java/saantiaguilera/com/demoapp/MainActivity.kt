@@ -3,22 +3,19 @@ package saantiaguilera.com.demoapp
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.TextView
 import android.widget.Toast
 import com.saantiaguilera.locales.observer.subscribe
 import com.saantiaguilera.locales.util.LocaleUtil
 import com.saantiaguilera.loquacious.Loquacious
 import com.saantiaguilera.loquacious.model.Item
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var helloWorldText: TextView
 
     /**
      * We subscribe to locale changes, so we ask again the server for its localized strings
@@ -33,15 +30,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        helloWorldText = findViewById(R.id.helloWorld)
-
         // Request the locale for the starting settings. We should ofc do this only once to avoid
         // useless api calls
         request(LocaleUtil.current()?.toString()!!)
     }
 
     fun updateHelloWorld() {
-        helloWorldText.text = resources.getString(R.string.hello_world)
+        helloWorld.text = resources.getString(R.string.hello_world)
     }
 
     private fun request(locale: String) {
