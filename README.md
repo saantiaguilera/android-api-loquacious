@@ -17,6 +17,10 @@ and more. The aim of this library is:
 
 Please refer to the [wiki](https://github.com/saantiaguilera/android-api-loquacious/wiki) for usage and installation
 
+## Sample
+
+Here is a sample [video](https://www.youtube.com/watch?v=JkjCxA4ru7A) showing how to use this library. Although the example is extremely simple, it gives you a grasp of all the things you could achieve
+
 ## License
 
 BSD License
