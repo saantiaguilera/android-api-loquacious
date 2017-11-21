@@ -30,6 +30,7 @@ class Resources(context: Context) :
     var stores: List<Store> = ArrayList()
         private set
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY)
     fun with(store: Store) {
         if (stores.find { it.javaClass == store.javaClass } != null) {
             throw IllegalStateException("There's already a store of this type")

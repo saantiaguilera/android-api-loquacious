@@ -45,9 +45,7 @@ class Loquacious private constructor(context: Context) {
          * Wraps the context in a new one. Useful if you want to use the remote resources
          * in XMLs or natively as activity.resources instead of Loquacious.resources
          */
-        fun wrap(context: Context): Context {
-            return ContextWrapper.wrap(context)
-        }
+        fun wrap(context: Context): Context = ContextWrapper.wrap(context)
 
     }
 
