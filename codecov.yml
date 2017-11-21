@@ -3,21 +3,21 @@ coverage:
     project:
       default: off
       minimum:
-        target: 70%
+        target: 50%
       decrement:
         target: auto
         threshold: 0.5%
         if_not_found: success
       loquacious:
-        target: 70%
+        target: 50%
         flags: loquacious
       locales:
-        target: 70%
+        target: 50%
         flags: locales
     patch:
       default: off
       pr_coverage:
-        target: 70%
+        target: 50%
 flags:
   loquacious:
     paths:
