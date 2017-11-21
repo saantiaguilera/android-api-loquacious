@@ -15,11 +15,6 @@ android {
         targetSdkVersion _targetSdkVersion
     }
 
-    buildTypes {
-        release.testCoverageEnabled true
-        debug.initWith(release)
-    }
-
     testOptions.unitTests.all {
         jacoco.includeNoLocationClasses = true
     }
