@@ -19,7 +19,7 @@ import java.util.*
  * Created by saguilera on 11/18/17.
  */
 @RunWith(RobolectricTestRunner::class)
-class ResourceTest {
+class ResourcesTest {
 
     private var resources: Resources? = null
 

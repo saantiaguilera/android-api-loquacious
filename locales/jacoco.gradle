@@ -59,19 +59,7 @@ def createReportTask(def variant) {
         reportTask.description = "Generates Jacoco coverage reports for the ${variant.name} variant."
         reportTask.executionData = project.files(executionData)
         reportTask.sourceDirectories = project.files(sourceDirs)
-        reportTask.classDirectories =
-                project.fileTree(dir: classesDir, excludes: [
-                        '**/R.class',
-                        '**/R$*.class',
-                        '**/BuildConfig.class',
-                        '**/*$ViewInjector*.*',
-                        '**/*$ViewBinder*.*',
-                        '**/Manifest*.*',
-                        '**/*Dagger*.*',
-                        '**/*MembersInjector*.*',
-                        '**/*_Provide*Factory*.*',
-                        '**/*_Factory*.*',
-                ])
+        reportTask.classDirectories = classesDir
         reportTask.reports {
             csv.enabled false
             html.enabled true
@@ -85,7 +73,20 @@ def sourceDirs(variant) {
 }
 
 def classesDir(variant) {
-    variant.javaCompile.destinationDir
+    def filters = ['**/R.class',
+                   '**/R$*.class',
+                   '**/BuildConfig.class',
+                   '**/*$ViewInjector*.*',
+                   '**/*$ViewBinder*.*',
+                   '**/Manifest*.*',
+                   '**/*Dagger*.*',
+                   '**/*MembersInjector*.*',
+                   '**/*_Provide*Factory*.*',
+                   '**/*_Factory*.*' ]
+    def javaTree = fileTree(dir: variant.javaCompile.destinationDir, excludes: filters)
+    def kotlinTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${variant}", excludes: filters)
+
+    files([ javaTree ], [ kotlinTree ])
 }
 
 def testTask(variant) {

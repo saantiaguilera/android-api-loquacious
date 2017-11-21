@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply from: 'dependencies.gradle'
 
+apply from: 'jacoco.gradle'
+
 android {
     compileSdkVersion _targetSdkVersion
     buildToolsVersion _buildToolsVersion
@@ -11,6 +13,15 @@ android {
     defaultConfig {
         minSdkVersion _minSdkVersion
         targetSdkVersion _targetSdkVersion
+    }
+
+    buildTypes {
+        release.testCoverageEnabled true
+        debug.initWith(release)
+    }
+
+    testOptions.unitTests.all {
+        jacoco.includeNoLocationClasses = true
     }
 }
 
@@ -23,5 +34,3 @@ dependencies {
     testCompile dependency.test.robolectric
     testCompile dependency.test.mockito
 }
-
-apply from: 'jacoco.gradle'

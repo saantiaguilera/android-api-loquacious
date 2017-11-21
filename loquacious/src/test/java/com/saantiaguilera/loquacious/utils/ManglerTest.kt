@@ -6,12 +6,23 @@ import com.saantiaguilera.loquacious.util.Mangler
 import org.junit.Assert
 
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.util.ReflectionHelpers
 
 /**
  * Created by saguilera on 11/18/17.
  */
-
+@RunWith(RobolectricTestRunner::class)
 class ManglerTest {
+
+    @Test
+    fun test_Manger_CantBeInstantiated() {
+        try {
+            ReflectionHelpers.callConstructor(Mangler::class.java)
+            Assert.fail()
+        } catch (ignored: Exception) {}
+    }
 
     @Test
     fun test_Mangler_ContainsNameInfo() {
