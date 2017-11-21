@@ -1,6 +1,6 @@
 ## Loquacious - Getting resources on demand
 
-[![CircleCI](https://circleci.com/gh/saantiaguilera/android-api-loquacious/tree/master.svg?style=svg)](https://circleci.com/gh/saantiaguilera/android-api-loquacious/tree/master)  [ ![Download](https://api.bintray.com/packages/saantiaguilera/maven/com.saantiaguilera.loquacious.loquacious/images/download.svg) ](https://bintray.com/saantiaguilera/maven/com.saantiaguilera.loquacious.loquacious/_latestVersion)
+[![CircleCI](https://circleci.com/gh/saantiaguilera/android-api-loquacious/tree/master.svg?style=svg)](https://circleci.com/gh/saantiaguilera/android-api-loquacious/tree/master)  [ ![Download](https://api.bintray.com/packages/saantiaguilera/maven/com.saantiaguilera.loquacious.loquacious/images/download.svg) ](https://bintray.com/saantiaguilera/maven/com.saantiaguilera.loquacious.loquacious/_latestVersion) [![codecov](https://codecov.io/gh/saantiaguilera/android-api-loquacious/branch/master/graph/badge.svg)](https://codecov.io/gh/saantiaguilera/android-api-loquacious)
 
 
 Loquacious is a library for saving resources (Strings, booleans, whatever) in a localized way.
@@ -16,6 +16,10 @@ and more. The aim of this library is:
 ## Usage
 
 Please refer to the [wiki](https://github.com/saantiaguilera/android-api-loquacious/wiki) for usage and installation
+
+## Sample
+
+Here is a sample [video](https://www.youtube.com/watch?v=JkjCxA4ru7A) showing how to use this library. Although the example is extremely simple, it gives you a grasp of all the things you could achieve
 
 ## License
 
